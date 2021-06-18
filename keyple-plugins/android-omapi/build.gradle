@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
 }
 
-archivesBaseName = "keyple-java-plugin-android-omapi"
+archivesBaseName = "keyple-plugin-android-omapi-java-api"
 
 android {
     compileSdkVersion 29
