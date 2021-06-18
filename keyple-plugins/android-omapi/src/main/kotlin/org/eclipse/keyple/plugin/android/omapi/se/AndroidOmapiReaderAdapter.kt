@@ -77,11 +77,13 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, plugi
      *
      * @since 2.0
      */
-    override fun getPowerOnDataBytes(): ByteArray {
-        return session.let {
-            Timber.i("Retrieving ATR from session...")
-            it?.atr ?: byteArrayOf()
-        }
+    override fun getPowerOnData(): String {
+        val atr = session?.atr
+        return if(atr != null){
+            val sAtr =  ByteArrayUtil.toHex(atr)
+            Timber.i("Retrieving ATR from session: $sAtr")
+            sAtr
+        }else ""
     }
 
     /**
