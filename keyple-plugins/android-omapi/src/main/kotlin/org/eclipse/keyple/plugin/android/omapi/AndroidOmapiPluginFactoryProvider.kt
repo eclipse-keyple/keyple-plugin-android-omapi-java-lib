@@ -13,6 +13,16 @@ package org.eclipse.keyple.plugin.android.omapi
 
 import android.app.Activity
 
+/**
+ * Provides plugin's Factory. Regarding version of the device,
+ * the factory will return adapters with readers built upon android.se or Simalliance omapi library
+ *
+ * This factory must be provided to SmartCardServiceProvider.
+ *
+ * <pre>SmartCardServiceProvider.getService().registerPlugin(AndroidOmapiPluginFactoryProvider(this, callback).getFactory())</pre>
+ *
+ * @since 2.0
+ */
 class AndroidOmapiPluginFactoryProvider(private val activity: Activity, private val callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory {
 
     fun getFactory(): AndroidOmapiPluginFactory {

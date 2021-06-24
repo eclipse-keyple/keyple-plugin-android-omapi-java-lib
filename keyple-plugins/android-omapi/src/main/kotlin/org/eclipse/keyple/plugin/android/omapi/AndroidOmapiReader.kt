@@ -12,9 +12,15 @@
 package org.eclipse.keyple.plugin.android.omapi
 
 import org.eclipse.keyple.core.common.KeypleReaderExtension
+import org.eclipse.keyple.core.plugin.spi.reader.AutonomousSelectionReaderSpi
 import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
 
-interface AndroidOmapiReader : KeypleReaderExtension, ReaderSpi {
+/**
+ * Generic type for a Keyple Android OMAPI reader extension.
+ *
+ * @since 2.0
+ */
+interface AndroidOmapiReader : KeypleReaderExtension, AutonomousSelectionReaderSpi, ReaderSpi {
     companion object {
         const val READER_NAME = "AndroidOmapiReader"
     }

@@ -32,6 +32,60 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, plugi
      *
      * @since 2.0
      */
+    override fun openChannelForAid(aid: ByteArray?, isoControlMask: Byte): ByteArray? {
+        if (aid == null) { try {
+            openChannel = session?.openBasicChannel(null)
+        } catch (e: IOException) {
+            Timber.e(e, "IOException")
+            throw ReaderIOException("IOException while opening basic channel.")
+        } catch (e: SecurityException) {
+            Timber.e(e, "SecurityException")
+            throw ReaderIOException("Error while opening basic channel, DFNAME = " + ByteArrayUtil.toHex(aid), e.cause)
+        }
+
+            if (openChannel == null) {
+                throw ReaderIOException("Failed to open a basic channel.")
+            }
+        } else {
+            Timber.i("[%s] openLogicalChannel => Select Application with AID = %s",
+                this.name, ByteArrayUtil.toHex(aid))
+            try {
+                openChannel =
+                    session?.openLogicalChannel(aid, isoControlMask)
+            } catch (e: IOException) {
+                Timber.e(e, "IOException")
+                throw ReaderIOException("IOException while opening logical channel.")
+            } catch (e: NoSuchElementException) {
+                Timber.e(e, "NoSuchElementException")
+                throw java.lang.IllegalArgumentException(
+                    "NoSuchElementException: " + ByteArrayUtil.toHex(aid), e)
+            } catch (e: SecurityException) {
+                Timber.e(e, "SecurityException")
+                throw ReaderIOException("SecurityException while opening logical channel, aid :" + ByteArrayUtil.toHex(aid), e.cause)
+            }
+
+            if (openChannel == null) {
+                throw ReaderIOException("Failed to open a logical channel.")
+            }
+        }
+        /* get the FCI and build an ApduResponse */
+        return openChannel?.selectResponse
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.0
+     */
+    override fun closeLogicalChannel() {
+        session?.closeChannels()
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.0
+     */
     @Throws(ReaderIOException::class)
     override fun openPhysicalChannel() {
         try {
@@ -114,7 +168,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, plugi
      *
      * @since 2.0
      */
-    override fun unregister() {
+    override fun onUnregister() {
         // NOTHING TO DO
     }
 }

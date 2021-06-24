@@ -58,7 +58,7 @@ internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPl
         return AndroidOmapiPlugin.PLUGIN_NAME
     }
 
-    override fun unregister() {
+    override fun onUnregister() {
         // DO nothing
     }
 }

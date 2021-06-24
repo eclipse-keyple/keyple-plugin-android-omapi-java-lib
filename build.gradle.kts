@@ -2,7 +2,7 @@
 //  GRADLE CONFIGURATION
 ///////////////////////////////////////////////////////////////////////////////
 plugins {
-    `java`
+    java
     id("com.diffplug.spotless") version "5.10.2"
     id("org.sonarqube") version "3.1"
     jacoco
@@ -11,8 +11,8 @@ buildscript {
     val kotlinVersion by extra("1.4.20")
     repositories {
         mavenLocal()
+        maven(url = "https://repo.eclipse.org/service/local/repositories/maven_central/content")
         mavenCentral()
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         google()
         jcenter()
     }
@@ -24,7 +24,6 @@ buildscript {
         classpath("org.eclipse.keyple:keyple-gradle:0.2.+")
     }
 }
-apply(plugin = "org.eclipse.keyple")
 
 ///////////////////////////////////////////////////////////////////////////////
 //  APP CONFIGURATION
@@ -33,12 +32,13 @@ allprojects{
     group = "org.eclipse.keyple"
     apply (plugin = "org.jetbrains.dokka")
     apply (plugin = "com.diffplug.spotless")
-    project.version = "1.0.1"
 
     repositories {
         mavenLocal()
+        maven(url = "https://repo.eclipse.org/service/local/repositories/maven_central/content")
         mavenCentral()
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots")
         google()
         jcenter()
     }

@@ -13,6 +13,11 @@ package org.eclipse.keyple.plugin.android.omapi
 
 import org.eclipse.keyple.core.common.KeyplePluginExtension
 
+/**
+ * Generic type for a Keyple Android OMAPI plugin extension.
+ *
+ * @since 2.0
+ */
 interface AndroidOmapiPlugin : KeyplePluginExtension {
     companion object {
         const val PLUGIN_NAME = "AndroidOmapiPlugin"

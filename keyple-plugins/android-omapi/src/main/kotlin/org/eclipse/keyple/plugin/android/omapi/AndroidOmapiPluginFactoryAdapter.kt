@@ -20,7 +20,7 @@ import org.eclipse.keyple.core.plugin.PluginIOException
 import org.eclipse.keyple.core.plugin.spi.PluginFactorySpi
 import org.eclipse.keyple.core.plugin.spi.PluginSpi
 
-class AndroidOmapiPluginFactoryAdapter(private val context: Context, callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory, PluginFactorySpi {
+internal class AndroidOmapiPluginFactoryAdapter(private val context: Context, callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory, PluginFactorySpi {
 
     private var sdkVersion: Int = Build.VERSION.SDK_INT
     private var readerPlugin: AbstractAndroidOmapiPluginAdapter<*, *>

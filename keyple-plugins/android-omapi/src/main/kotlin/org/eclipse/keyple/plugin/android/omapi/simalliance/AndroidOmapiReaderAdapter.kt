@@ -30,71 +30,72 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, plugi
     private var openChannel: Channel? = null
     private val omapiVersion = nativeReader.seService.version.toFloat()
 
-    // TODO Comment gérer ce comportement avec Keyple V2???
     /**
-     * Open a logical channel by selecting the application
+     * {@inheritDoc}
      *
-     * @param dfName A byte array containing the DF name or null if a basic opening is wanted.
-     * @param isoControlMask The selection bits defined by the ISO selection command and expected by the OMAPI as P2 parameter.
-     * @return A byte array containing the response to the OMAPI openLogicalChannel process or null if the Secure Element is unable to
-     *         provide a new logical channel
-     * @throws KeypleReaderIOException if the communication with the reader or the card has failed
-     *
-     * @since 0.9
+     * @since 2.0
      */
-//    @Throws(KeypleReaderIOException::class)
-//    override fun openChannelForAid(dfName: ByteArray?, isoControlMask: Byte): ByteArray? {
-//        if (dfName == null) {
-//            try {
-//                openChannel = session?.openBasicChannel(null)
-//            } catch (e: IOException) {
-//                Timber.e(e)
-//                throw KeypleReaderIOException("IOException while opening basic channel.")
-//            } catch (e: SecurityException) {
-//                Timber.e(e)
-//                throw KeypleReaderIOException("Error while opening basic channel, DFNAME = " + ByteArrayUtil.toHex(dfName), e.cause)
-//            }
-//
-//            if (openChannel == null) {
-//                throw KeypleReaderIOException("Failed to open a basic channel.")
-//            }
-//        } else {
-//            Timber.i("[%s] openLogicalChannel => Select Application with AID = %s",
-//                this.name, ByteArrayUtil.toHex(dfName))
-//            try {
-//                // openLogicalChannel of SimAlliance OMAPI is only available for version 3.0+ of the library.
-//                // By default the library always passes p2=00h
-//                // So if a p2 different of 00h is requested, we must check if omapi support it. Otherwise we throw an exception.
-//                val p2 = isoControlMask
-//                openChannel =
-//                    if (0 == p2.toInt()) {
-//                        session?.openLogicalChannel(dfName)
-//                    } else {
-//                        if (omapiVersion >= P2_SUPPORTED_MIN_VERSION) {
-//                            session?.openLogicalChannel(dfName, p2)
-//                        } else {
-//                            throw KeypleReaderIOException("P2 != 00h while opening logical channel is only supported by OMAPI version >= 3.0. Current is $omapiVersion")
-//                        }
-//                    }
-//            } catch (e: IOException) {
-//                Timber.e(e, "IOException")
-//                throw KeypleReaderIOException("IOException while opening logical channel.", e)
-//            } catch (e: NoSuchElementException) {
-//                Timber.e(e, "NoSuchElementException")
-//                throw java.lang.IllegalArgumentException(
-//                    "NoSuchElementException: " + ByteArrayUtil.toHex(dfName), e)
-//            } catch (e: SecurityException) {
-//                Timber.e(e, "SecurityException")
-//                throw KeypleReaderIOException("SecurityException while opening logical channel, aid :" + ByteArrayUtil.toHex(dfName), e.cause)
-//            }
-//
-//            if (openChannel == null) {
-//                throw KeypleReaderIOException("Failed to open a logical channel.")
-//            }
-//        }
-//        /* get the FCI and build an ApduResponse */
-//        return openChannel!!.selectResponse
-//    }
+    override fun openChannelForAid(aid: ByteArray?, isoControlMask: Byte): ByteArray {
+        if (aid == null) {
+            try {
+                openChannel = session?.openBasicChannel(null)
+            } catch (e: IOException) {
+                Timber.e(e)
+                throw ReaderIOException("IOException while opening basic channel.")
+            } catch (e: ReaderIOException) {
+                Timber.e(e)
+                throw ReaderIOException("Error while opening basic channel, DFNAME = " + ByteArrayUtil.toHex(aid), e.cause)
+            }
+
+            if (openChannel == null) {
+                throw ReaderIOException("Failed to open a basic channel.")
+            }
+        } else {
+            Timber.i("[%s] openLogicalChannel => Select Application with AID = %s",
+                this.getName(), ByteArrayUtil.toHex(aid))
+            try {
+                // openLogicalChannel of SimAlliance OMAPI is only available for version 3.0+ of the library.
+                // By default the library always passes p2=00h
+                // So if a p2 different of 00h is requested, we must check if omapi support it. Otherwise we throw an exception.
+                val p2 = isoControlMask
+                openChannel =
+                    if (0 == p2.toInt()) {
+                        session?.openLogicalChannel(aid)
+                    } else {
+                        if (omapiVersion >= P2_SUPPORTED_MIN_VERSION) {
+                            session?.openLogicalChannel(aid, p2)
+                        } else {
+                            throw ReaderIOException("P2 != 00h while opening logical channel is only supported by OMAPI version >= 3.0. Current is $omapiVersion")
+                        }
+                    }
+            } catch (e: IOException) {
+                Timber.e(e, "IOException")
+                throw ReaderIOException("IOException while opening logical channel.", e)
+            } catch (e: NoSuchElementException) {
+                Timber.e(e, "NoSuchElementException")
+                throw java.lang.IllegalArgumentException(
+                    "NoSuchElementException: " + ByteArrayUtil.toHex(aid), e)
+            } catch (e: SecurityException) {
+                Timber.e(e, "SecurityException")
+                throw ReaderIOException("SecurityException while opening logical channel, aid :" + ByteArrayUtil.toHex(aid), e.cause)
+            }
+
+            if (openChannel == null) {
+                throw ReaderIOException("Failed to open a logical channel.")
+            }
+        }
+        /* get the FCI and build an ApduResponse */
+        return openChannel!!.selectResponse
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 2.0
+     */
+    override fun closeLogicalChannel() {
+        session?.closeChannels()
+    }
 
     /**
      * {@inheritDoc}
@@ -183,7 +184,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, plugi
      *
      * @since 2.0
      */
-    override fun unregister() {
+    override fun onUnregister() {
         // NOTHING TO DO
     }
 }
