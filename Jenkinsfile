@@ -16,33 +16,25 @@ pipeline {
       script {
         env.KEYPLE_VERSION = sh(script: 'grep version gradle.properties | cut -d= -f2 | tr -d "[:space:]"', returnStdout: true).trim()
         env.GIT_COMMIT_MESSAGE = sh(script: 'git log --format=%B -1 | head -1 | tr -d "\n"', returnStdout: true)
+        env.SONAR_USER_HOME = '/home/jenkins'
         echo "Building version ${env.KEYPLE_VERSION} in branch ${env.GIT_BRANCH}"
         deployRelease = env.GIT_URL == "https://github.com/eclipse/${env.PROJECT_NAME}.git" && (env.GIT_BRANCH == "main" || env.GIT_BRANCH == "release-${env.KEYPLE_VERSION}") && env.CHANGE_ID == null && env.GIT_COMMIT_MESSAGE.startsWith("Release ${env.KEYPLE_VERSION}")
         deploySnapshot = !deployRelease && env.GIT_URL == "https://github.com/eclipse/${env.PROJECT_NAME}.git" && (env.GIT_BRANCH == "main" || env.GIT_BRANCH == "release-${env.KEYPLE_VERSION}") && env.CHANGE_ID == null
+        sh 'git lfs fetch && git lfs checkout'
       }
     } } }
-    stage('Build and Test:') {
+    stage('Build and Test') {
       when { expression { !deploySnapshot && !deployRelease } }
-      parallel {
-        stage('Java 6') { steps { container('java-builder') {
-          sh './gradlew clean build -P javaSourceLevel=1.6 -P javaTargetLevel=1.6 -P buildDir=build-6 --no-build-cache --info'
-          junit testResults: 'build-6/test-results/test/*.xml', allowEmptyResults: true
-        } } }
-        stage('Java 8') { steps { container('java-builder') {
-          sh './gradlew clean build -P javaSourceLevel=1.8 -P javaTargetLevel=1.8 -P buildDir=build-8 --no-build-cache --info'
-          junit testResults: 'build-8/test-results/test/*.xml', allowEmptyResults: true
-        } } }
-        stage('Java 11') { steps { container('java-builder') {
-          sh './gradlew clean build -P javaSourceLevel=11 -P javaTargetLevel=11 -P buildDir=build-11 --no-build-cache --info'
-          junit testResults: 'build-11/test-results/test/*.xml', allowEmptyResults: true
-        } } }
-      }
+      steps { container('java-builder') {
+        sh './gradlew clean build test --no-build-cache --info --stacktrace'
+        junit testResults: 'build/test-results/test/*.xml', allowEmptyResults: true
+      } }
     }
     stage('Publish Snapshot') {
       when { expression { deploySnapshot } }
       steps { container('java-builder') {
         configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '/home/jenkins/agent/gradle.properties')]) {
-          sh './gradlew clean build test publish --info'
+          sh './gradlew clean build test publish --info --stacktrace'
         }
         junit testResults: 'build/test-results/test/*.xml', allowEmptyResults: true
       } }
@@ -51,7 +43,7 @@ pipeline {
       when { expression { deployRelease } }
       steps { container('java-builder') {
         configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '/home/jenkins/agent/gradle.properties')]) {
-          sh './gradlew clean release --info'
+          sh './gradlew clean release --info --stacktrace'
         }
         junit testResults: 'build/test-results/test/*.xml', allowEmptyResults: true
       } }
@@ -61,7 +53,7 @@ pipeline {
       steps { container('java-builder') {
         catchError(buildResult: 'SUCCESS', message: 'Unable to log code quality to Sonar.', stageResult: 'FAILURE') {
           withCredentials([string(credentialsId: 'sonarcloud-token', variable: 'SONAR_LOGIN')]) {
-            sh './gradlew sonarqube --info'
+            sh './gradlew sonarqube --info --stacktrace'
           }
         }
       } }
