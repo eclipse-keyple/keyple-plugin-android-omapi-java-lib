@@ -22,7 +22,7 @@ import org.eclipse.keyple.plugin.android.omapi.AbstractAndroidOmapiReader
 import timber.log.Timber
 
 @RequiresApi(android.os.Build.VERSION_CODES.P)
-internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, pluginName: String, readerName: String) : AbstractAndroidOmapiReader(pluginName, readerName) {
+internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, readerName: String) : AbstractAndroidOmapiReader(readerName) {
 
     private var session: Session? = null
     private var openChannel: Channel? = null

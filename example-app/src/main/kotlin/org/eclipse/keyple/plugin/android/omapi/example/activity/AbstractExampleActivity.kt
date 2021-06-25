@@ -15,9 +15,9 @@ import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
@@ -71,23 +71,18 @@ abstract class AbstractExampleActivity : AppCompatActivity(), NavigationView.OnN
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+    }
+
     protected fun initActionBar(toolbar: Toolbar, title: String, subtitle: String) {
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.title = title
         actionBar?.subtitle = subtitle
-    }
-
-    protected fun showAlertDialog(t: Throwable) {
-        val builder = AlertDialog.Builder(this@AbstractExampleActivity)
-        builder.setTitle(R.string.alert_dialog_title)
-        builder.setMessage(getString(R.string.alert_dialog_message, t.message))
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-    protected fun initFromBackgroundTextView() {
-        addResultEvent("Smartcard detected while in background...")
     }
 
     protected fun clearEvents() {

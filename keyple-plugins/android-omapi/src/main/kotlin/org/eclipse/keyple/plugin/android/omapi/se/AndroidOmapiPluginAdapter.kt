@@ -16,7 +16,6 @@ import android.se.omapi.SEService
 import androidx.annotation.RequiresApi
 import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
 import org.eclipse.keyple.plugin.android.omapi.AbstractAndroidOmapiPluginAdapter
-import org.eclipse.keyple.plugin.android.omapi.AndroidOmapiPlugin
 import timber.log.Timber
 
 /**
@@ -43,6 +42,6 @@ internal object AndroidOmapiPluginAdapter : AbstractAndroidOmapiPluginAdapter<an
     override fun mapToReader(nativeReader: android.se.omapi.Reader): ReaderSpi {
         Timber.d("Reader available name : %s", nativeReader.name)
         Timber.d("Reader available isCardPresent : %S", nativeReader.isSecureElementPresent)
-        return AndroidOmapiReaderAdapter(nativeReader, AndroidOmapiPlugin.PLUGIN_NAME, nativeReader.name)
+        return AndroidOmapiReaderAdapter(nativeReader, mapNativeReaderNameToKeypleReaderName(nativeReader.name))
     }
 }

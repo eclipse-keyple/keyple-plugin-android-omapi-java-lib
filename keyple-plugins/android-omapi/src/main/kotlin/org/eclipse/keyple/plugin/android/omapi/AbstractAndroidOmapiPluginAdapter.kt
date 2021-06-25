@@ -61,4 +61,20 @@ internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPl
     override fun onUnregister() {
         // DO nothing
     }
+
+    /**
+     * Map Native reader name (SIM, SIM1,SIM2,ESE) to Keyple reader name const
+     * Return nativeReaderName if no mapping found
+     */
+    protected fun mapNativeReaderNameToKeypleReaderName(nativeReaderName: String): String {
+        return if (nativeReaderName.equals("SIM", true) || nativeReaderName.equals("SIM1", true)) {
+            AndroidOmapiReader.READER_NAME_SIM_1
+        } else if (nativeReaderName.equals("SIM2", true)) {
+            AndroidOmapiReader.READER_NAME_SIM_2
+        } else if (nativeReaderName.equals("ESE", true)) {
+            AndroidOmapiReader.READER_NAME_ESE
+        } else {
+            nativeReaderName
+        }
+    }
 }

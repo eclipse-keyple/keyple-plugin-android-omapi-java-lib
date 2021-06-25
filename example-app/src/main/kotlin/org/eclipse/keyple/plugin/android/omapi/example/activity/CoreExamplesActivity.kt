@@ -44,7 +44,7 @@ class CoreExamplesActivity : AbstractExampleActivity() {
          */
         AndroidOmapiPluginFactoryProvider(this) {
             val plugin = SmartCardServiceProvider.getService().registerPlugin(it)
-            reader = plugin.getReader(AndroidOmapiReader.READER_NAME)
+            reader = plugin.getReader(AndroidOmapiReader.READER_NAME_SIM_1)
             Toast.makeText(this@CoreExamplesActivity, "Inited", Toast.LENGTH_LONG).show()
         }
     }
@@ -103,7 +103,7 @@ class CoreExamplesActivity : AbstractExampleActivity() {
                  * Select the first application matching the selection AID whatever the card communication
                  * protocol keep the logical channel open after the selection
                  */
-                val aid = CalypsoClassicInfo.AID_HOPLINK
+                val aid = CalypsoClassicInfo.AID_NAVIGO_2013
 
                 /**
                  * Generic selection: configures a CardSelector with all the desired attributes to make
@@ -116,6 +116,11 @@ class CoreExamplesActivity : AbstractExampleActivity() {
                  * Create a card selection using the generic card extension.
                  */
                 cardSelectionManager.prepareSelection(cardSelection)
+
+                /**
+                 * Release the channel after the selection is done
+                 */
+                cardSelectionManager.prepareReleaseChannel()
 
                 /**
                  * We won't be listening for event update within this use case

@@ -20,7 +20,7 @@ import org.simalliance.openmobileapi.Reader
 import org.simalliance.openmobileapi.Session
 import timber.log.Timber
 
-internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, pluginName: String, readerName: String) : AbstractAndroidOmapiReader(pluginName, readerName) {
+internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, readerName: String) : AbstractAndroidOmapiReader(readerName) {
 
     companion object {
         private const val P2_SUPPORTED_MIN_VERSION = 3

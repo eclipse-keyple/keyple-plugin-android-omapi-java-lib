@@ -22,6 +22,8 @@ import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
  */
 interface AndroidOmapiReader : KeypleReaderExtension, AutonomousSelectionReaderSpi, ReaderSpi {
     companion object {
-        const val READER_NAME = "AndroidOmapiReader"
+        const val READER_NAME_SIM_1 = "AndroidOmapiReaderSim1"
+        const val READER_NAME_SIM_2 = "AndroidOmapiReaderSim2"
+        const val READER_NAME_ESE = "AndroidOmapiReaderESE"
     }
 }

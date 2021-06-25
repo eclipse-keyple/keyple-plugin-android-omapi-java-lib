@@ -13,10 +13,10 @@ package org.eclipse.keyple.plugin.android.omapi
 
 import org.eclipse.keyple.core.util.protocol.ContactCardCommonProtocol
 
-internal abstract class AbstractAndroidOmapiReader(pluginName: String, readerName: String) : AndroidOmapiReader {
+internal abstract class AbstractAndroidOmapiReader(private val readerName: String) : AndroidOmapiReader {
 
     override fun getName(): String {
-        return AndroidOmapiReader.READER_NAME
+        return readerName
     }
 
     override fun isProtocolSupported(readerProtocol: String?): Boolean {
