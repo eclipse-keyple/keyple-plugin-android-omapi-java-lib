@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2021 Calypso Networks Association https://www.calypsonet-asso.org/
+ * Copyright (c) 2021 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -104,11 +104,11 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, plugi
      */
     override fun getPowerOnData(): String {
         val atr = session?.atr
-        return if(atr != null){
-            val sAtr =  ByteArrayUtil.toHex(atr)
+        return if (atr != null) {
+            val sAtr = ByteArrayUtil.toHex(atr)
             Timber.i("Retrieving ATR from session: $sAtr")
             sAtr
-        }else ""
+        } else ""
     }
 
     /**

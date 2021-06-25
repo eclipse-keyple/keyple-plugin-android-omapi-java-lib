@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2021 Calypso Networks Association https://www.calypsonet-asso.org/
+ * Copyright (c) 2021 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -25,7 +25,9 @@ import android.app.Activity
  */
 class AndroidOmapiPluginFactoryProvider(private val activity: Activity, private val callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory {
 
+    private var factoryAdapter: AndroidOmapiPluginFactoryAdapter = AndroidOmapiPluginFactoryAdapter(activity, callback)
+
     fun getFactory(): AndroidOmapiPluginFactory {
-        return AndroidOmapiPluginFactoryAdapter(activity, callback)
+        return factoryAdapter
     }
 }

@@ -1,5 +1,5 @@
 /* **************************************************************************************
- * Copyright (c) 2020 Calypso Networks Association https://www.calypsonet-asso.org/
+ * Copyright (c) 2020 Calypso Networks Association https://calypsonet.org/
  *
  * See the NOTICE file(s) distributed with this work for additional information
  * regarding copyright ownership.
@@ -22,26 +22,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import java.io.IOException
-import kotlinx.android.synthetic.main.activity_calypso_examples.drawerLayout
-import kotlinx.android.synthetic.main.activity_calypso_examples.eventRecyclerView
-import kotlinx.android.synthetic.main.activity_calypso_examples.navigationView
-import kotlinx.android.synthetic.main.activity_calypso_examples.toolbar
-import org.eclipse.keyple.core.service.ObservableReader
-import org.eclipse.keyple.core.service.Reader
+import kotlinx.android.synthetic.main.activity_core_examples.*
 import org.eclipse.keyple.core.service.ReaderEvent
-import org.eclipse.keyple.core.service.SmartCardServiceProvider
-import org.eclipse.keyple.core.service.selection.CardSelectionService
-import org.eclipse.keyple.core.service.selection.spi.SmartCard
-import org.eclipse.keyple.core.service.spi.ReaderObserverSpi
-import org.eclipse.keyple.core.util.ByteArrayUtil
-import org.eclipse.keyple.plugin.android.omapi.AndroidOmapiPluginFactoryAdapter
 import org.eclipse.keyple.plugin.android.omapi.example.R
 import org.eclipse.keyple.plugin.android.omapi.example.adapter.EventAdapter
 import org.eclipse.keyple.plugin.android.omapi.example.model.ChoiceEventModel
 import org.eclipse.keyple.plugin.android.omapi.example.model.EventModel
 import timber.log.Timber
 
-abstract class AbstractExampleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ReaderObserverSpi {
+abstract class AbstractExampleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     /**
      * Use to modify event update behaviour regarding current use case execution
@@ -57,10 +46,7 @@ abstract class AbstractExampleActivity : AppCompatActivity(), NavigationView.OnN
     private lateinit var layoutManager: RecyclerView.LayoutManager
     protected val events = arrayListOf<EventModel>()
 
-    protected lateinit var reader: Reader
-
     protected var useCase: UseCase? = null
-    protected lateinit var cardSelectionsService: CardSelectionService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,27 +68,6 @@ abstract class AbstractExampleActivity : AppCompatActivity(), NavigationView.OnN
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        /**
-         * Register AndroidNfc plugin Factory
-         */
-        val plugin = SmartCardServiceProvider.getService().registerPlugin(AndroidOmapiPluginFactoryAdapter(this))
-
-        /**
-         * Configure Nfc Reader
-         */
-        with(plugin.readers.values.first() as AndroidNfcReader) {
-            presenceCheckDelay = 100
-            noPlateformSound = false
-            skipNdefCheck = false
-            // with this protocol settings we activate the nfc for ISO1443_4 protocol
-            activateProtocol(ContactlessCardCommonProtocol.ISO_14443_4.name)
-            with(this as ObservableReader) {
-                addObserver(this@AbstractExampleActivity)
-                setReaderObservationExceptionHandler { pluginName, readerName, e ->
-                    Timber.e("An unexpected reader error occurred: $pluginName:$readerName : $e")
-                }
-            }
-        }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
@@ -168,31 +133,4 @@ abstract class AbstractExampleActivity : AppCompatActivity(), NavigationView.OnN
     }
 
     abstract fun initContentView()
-
-    override fun onDestroy() {
-        SmartCardServiceProvider.getService().plugins.forEach {
-            SmartCardServiceProvider.getService().unregisterPlugin(it.key)
-        }
-        super.onDestroy()
-    }
-
-    protected fun getSmardCardInfos(smartCard: SmartCard, index: Int): String {
-        val atr = try {
-            ByteArrayUtil.toHex(smartCard.atrBytes)
-        } catch (e: IllegalStateException) {
-            Timber.w(e)
-            e.message
-        }
-        val fci = try {
-            ByteArrayUtil.toHex(smartCard.fciBytes)
-        } catch (e: IllegalStateException) {
-            Timber.w(e)
-            e.message
-        }
-
-        return "Selection status for selection " +
-                "(indexed $index): \n\t\t" +
-                "ATR: ${atr}\n\t\t" +
-                "FCI: $fci"
-    }
 }

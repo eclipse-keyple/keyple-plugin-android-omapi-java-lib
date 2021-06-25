@@ -4,6 +4,12 @@ plugins {
     id 'kotlin-android-extensions'
 }
 
+//Loading Keystore specified for SE Access
+Properties properties = new Properties()
+if (project.rootProject.file("local.properties").exists()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
@@ -18,10 +24,28 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+
+    signingConfigs {
+        if (properties.containsKey("path_to_se_registered_keystore_cna")) {
+            keypleDebug {
+                storeFile file(properties["path_to_se_registered_keystore_cna"])
+                storePassword properties["store_password_cna"]
+                keyAlias properties["key_alias_cna"]
+                keyPassword properties["key_password_cna"]
+            }
+        }
+    }
+
     buildTypes {
+        if (properties.containsKey("path_to_se_registered_keystore_cna")) {
+            debug {
+                signingConfig signingConfigs.keypleDebug
+                debuggable true
+            }
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -44,15 +68,21 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], exclude: ['org.simalliance.openmobileapi.jar'], dir: 'libs')
 
-    //Keyple Common
+    //Keyple
     implementation project(path: ':keyple-plugins:android-omapi')
-    implementation "org.eclipse.keyple:keyple-java-service:2.0.0-SNAPSHOT"
-
-    //For Calypso Extension examples
-    implementation "org.eclipse.keyple:keyple-java-card-calypso:2.0.0-SNAPSHOT"
-
+    implementation("org.calypsonet.terminal:calypsonet-terminal-reader-java-api:1.0-SNAPSHOT")
+    implementation "org.eclipse.keyple:keyple-service-java-lib:2.0.0-SNAPSHOT"
     //For Generic Extension examples
-    implementation "org.eclipse.keyple:keyple-java-card-generic:2.0.0-SNAPSHOT"
+    implementation "org.eclipse.keyple:keyple-card-generic-java-lib:2.0.0-SNAPSHOT"
+
+    //TEST
+    //keyple
+    implementation("org.eclipse.keyple:keyple-common-java-api:2.0-SNAPSHOT")
+    implementation("org.eclipse.keyple:keyple-plugin-java-api:2.0-SNAPSHOT")
+    implementation("org.eclipse.keyple:keyple-util-java-lib:2.0.0-SNAPSHOT")
+
+    //
+
 
 
     /*
