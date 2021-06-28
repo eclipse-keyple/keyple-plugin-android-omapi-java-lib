@@ -21,7 +21,7 @@ buildscript {
         classpath ("com.diffplug.spotless:spotless-plugin-gradle:3.27.1")
         classpath ("org.jetbrains.dokka:dokka-gradle-plugin:0.10.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("org.eclipse.keyple:keyple-gradle:0.2.+")
+        classpath("org.eclipse.keyple:keyple-gradle:0.2.+") { isChanging = true }
     }
 }
 
