@@ -1,4 +1,4 @@
-url: https://github.com/eclipse/keyple-plugin-android-omapi-lib
+url: https://github.com/eclipse/keyple-plugin-android-omapi-java-lib
 organization:
   name: Eclipse Keyple
   url: https://keyple.org/
@@ -16,9 +16,9 @@ developers:
   - name: Pierre Terrée
     email: pierre.terree@calypsonet.org
 scm:
-  connection: scm:git:git://github.com/eclipse/keyple-plugin-android-omapi-lib.git
-  developerConnection: scm:git:https://github.com/eclipse/keyple-plugin-android-omapi-lib.git
-  url: https://github.com/eclipse/keyple-plugin-android-omapi-lib
+  connection: scm:git:git://github.com/eclipse/keyple-plugin-android-omapi-java-lib.git
+  developerConnection: scm:git:https://github.com/eclipse/keyple-plugin-android-omapi-java-lib.git
+  url: https://github.com/eclipse/keyple-plugin-android-omapi-java-lib
 ciManagement:
   system: Jenkins
-  url: https://ci.eclipse.org/keyple/job/Keyple/job/keyple-plugin-android-omapi-lib/
+  url: https://ci.eclipse.org/keyple/job/Keyple/job/keyple-plugin-android-omapi-java-lib/
