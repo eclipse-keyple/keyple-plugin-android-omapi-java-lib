@@ -9,20 +9,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ************************************************************************************** */
-package org.eclipse.keyple.plugin.android.omapi.simalliance
+package org.eclipse.keyple.plugin.android.omapi.se
 
 import android.content.Context
+import android.se.omapi.SEService
+import androidx.annotation.RequiresApi
+import java.util.concurrent.Executors
 import org.eclipse.keyple.plugin.android.omapi.SeServiceFactory
-import org.simalliance.openmobileapi.SEService
 
 /**
- * Implementation of {@link SeServiceFactory} using org.simalliance.openmobileapi
+ * Implementation of {@link SeServiceFactory} using android.se.omapi
  *
  * @since 2.0
  */
-internal class SeServiceFactoryImpl(private val applicationContext: Context) : SeServiceFactory<SEService, SEService.CallBack> {
+internal class SeServiceFactoryAdapter(private val applicationContext: Context) : SeServiceFactory<SEService, SEService.OnConnectedListener> {
 
-    override fun connectToSe(callBack: SEService.CallBack): SEService {
-        return SEService(applicationContext, callBack)
+    @RequiresApi(android.os.Build.VERSION_CODES.P)
+    override fun connectToSe(callBack: SEService.OnConnectedListener): SEService {
+        return SEService(applicationContext, Executors.newSingleThreadExecutor(), callBack)
     }
 }

@@ -27,7 +27,7 @@ import timber.log.Timber
 internal object AndroidOmapiPluginAdapter : AbstractAndroidOmapiPluginAdapter<android.se.omapi.Reader, SEService>() {
 
     override fun connectToSe(context: Context, callback: () -> Unit) {
-        val seServiceFactory = SeServiceFactoryImpl(context.applicationContext)
+        val seServiceFactory = SeServiceFactoryAdapter(context.applicationContext)
         seService = seServiceFactory.connectToSe(SEService.OnConnectedListener {
             Timber.i("Connected, ready to register plugin")
             Timber.i("OMAPI SEService version: %s", seService?.version)

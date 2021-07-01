@@ -75,8 +75,6 @@ dependencies {
     //For Generic Extension examples
     implementation "org.eclipse.keyple:keyple-card-generic-java-lib:2.0.0-SNAPSHOT"
 
-    //TEST
-    //keyple
     implementation("org.eclipse.keyple:keyple-common-java-api:2.0-SNAPSHOT")
     implementation("org.eclipse.keyple:keyple-plugin-java-api:2.0-SNAPSHOT")
     implementation("org.eclipse.keyple:keyple-util-java-lib:2.0.0-SNAPSHOT")
