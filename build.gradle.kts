@@ -5,6 +5,7 @@ plugins {
     java
     id("com.diffplug.spotless") version "5.10.2"
     id("org.sonarqube") version "3.1"
+    id("org.jetbrains.dokka") version "1.4.32"
     jacoco
 }
 buildscript {
@@ -19,7 +20,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.3")
         classpath ("com.diffplug.spotless:spotless-plugin-gradle:3.27.1")
-        classpath ("org.jetbrains.dokka:dokka-gradle-plugin:0.10.0")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.4.32")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("org.eclipse.keyple:keyple-gradle:0.2.+") { isChanging = true }
     }

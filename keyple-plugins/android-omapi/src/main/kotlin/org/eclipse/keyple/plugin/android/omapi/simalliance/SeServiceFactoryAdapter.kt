@@ -16,7 +16,7 @@ import org.eclipse.keyple.plugin.android.omapi.SeServiceFactory
 import org.simalliance.openmobileapi.SEService
 
 /**
- * Implementation of {@link SeServiceFactory} using org.simalliance.openmobileapi
+ * Implementation of [SeServiceFactory] using org.simalliance.openmobileapi
  *
  * @since 2.0
  */

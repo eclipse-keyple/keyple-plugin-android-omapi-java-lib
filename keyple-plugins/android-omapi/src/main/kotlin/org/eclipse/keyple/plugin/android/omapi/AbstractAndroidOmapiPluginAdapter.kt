@@ -31,7 +31,7 @@ internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPl
     private val params = mutableMapOf<String, String>()
 
     /**
-     * Initialize plugin by connecting to {@link SEService}
+     * Initialize plugin by connecting to [SEService]
      *
      * @since 0.9
      */

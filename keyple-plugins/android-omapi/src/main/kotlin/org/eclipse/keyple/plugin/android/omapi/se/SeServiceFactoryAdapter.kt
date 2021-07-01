@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
 import org.eclipse.keyple.plugin.android.omapi.SeServiceFactory
 
 /**
- * Implementation of {@link SeServiceFactory} using android.se.omapi
+ * Implementation of [SeServiceFactory] using android.se.omapi
  *
  * @since 2.0
  */

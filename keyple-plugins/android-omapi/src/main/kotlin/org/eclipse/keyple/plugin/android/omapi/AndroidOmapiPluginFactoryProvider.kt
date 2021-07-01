@@ -14,19 +14,30 @@ package org.eclipse.keyple.plugin.android.omapi
 import android.app.Activity
 
 /**
- * Provides plugin's Factory. Regarding version of the device,
- * the factory will return adapters with readers built upon android.se or Simalliance omapi library
+ * The following example shows how to create a [AndroidOmapiPluginFactoryFactory] object with the
+ * [AndroidOmapiPluginFactoryProvider] and use it to register a Plugin.
  *
- * This factory must be provided to SmartCardServiceProvider.
+ *```
+ * AndroidOmapiPluginFactoryProvider(this) {
+ *  val plugin = SmartCardServiceProvider.getService().registerPlugin(it)
+ * }
+ *```
  *
- * <pre>SmartCardServiceProvider.getService().registerPlugin(AndroidOmapiPluginFactoryProvider(this, callback).getFactory())</pre>
- *
+ * @property activity Any Android activity.
+ * @property callback Triggered when the reader is ready
+ * @constructor Builds instances of [AndroidOmapiPluginFactory] from context provided in constructor.
  * @since 2.0
  */
-class AndroidOmapiPluginFactoryProvider(private val activity: Activity, private val callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory {
+class AndroidOmapiPluginFactoryProvider(private val activity: Activity, callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory {
 
     private var factoryAdapter: AndroidOmapiPluginFactoryAdapter = AndroidOmapiPluginFactoryAdapter(activity, callback)
 
+    /**
+     * Returns an instance of [AndroidOmapiPluginFactory].
+     *
+     * @return A [AndroidOmapiPluginFactory]
+     * @since 2.0
+     */
     fun getFactory(): AndroidOmapiPluginFactory {
         return factoryAdapter
     }
