@@ -65,11 +65,11 @@ dependencies {
 
     //Keyple Common
     implementation(project(path = ":keyple-plugins:android-omapi"))
-    implementation("org.calypsonet.terminal:calypsonet-terminal-reader-java-api:1.0-rc2")
-    implementation("org.eclipse.keyple:keyple-common-java-api:2.0-rc2")
-    implementation("org.eclipse.keyple:keyple-service-java-lib:2.0.0-rc3")
-    implementation("org.eclipse.keyple:keyple-card-generic-java-lib:2.0.0-rc2")
-    implementation("org.eclipse.keyple:keyple-util-java-lib:2.0.0-rc2")
+    implementation("org.calypsonet.terminal:calypsonet-terminal-reader-java-api:1.0-SNAPSHOT") { isChanging = true }
+    implementation("org.eclipse.keyple:keyple-common-java-api:2.0-SNAPSHOT") { isChanging = true }
+    implementation("org.eclipse.keyple:keyple-service-java-lib:2.0.0-SNAPSHOT") { isChanging = true }
+    implementation("org.eclipse.keyple:keyple-card-generic-java-lib:2.0.0-SNAPSHOT") { isChanging = true }
+    implementation("org.eclipse.keyple:keyple-util-java-lib:2.0.0-SNAPSHOT") { isChanging = true }
 
     /*
     Android components
