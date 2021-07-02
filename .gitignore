@@ -5,6 +5,7 @@
 gen/
 out/
 release/
+local.properties
 
 # Gradle
 .gradle/
