@@ -4,7 +4,10 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("kotlin-android-extensions")
+    kotlin("android.extensions")
+    id("org.jetbrains.dokka")
+    jacoco
+    id("com.diffplug.spotless")
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,11 +19,14 @@ android {
     compileSdkVersion(29)
     buildToolsVersion("30.0.2")
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         minSdkVersion(19)
         targetSdkVersion(29)
-        versionCode(1)
-        versionName("1.0")
+        versionName(project.version.toString())
 
         testInstrumentationRunner("android.support.test.runner.AndroidJUnitRunner")
         consumerProguardFiles("consumer-rules.pro")
@@ -29,6 +35,7 @@ android {
     buildTypes {
         getByName("release") {
             minifyEnabled(false)
+            isTestCoverageEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -79,9 +86,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
     //keyple
-    implementation("org.eclipse.keyple:keyple-common-java-api:2.0-SNAPSHOT")
-    implementation("org.eclipse.keyple:keyple-plugin-java-api:2.0-SNAPSHOT")
-    implementation("org.eclipse.keyple:keyple-util-java-lib:2.0.0-SNAPSHOT")
+    implementation("org.eclipse.keyple:keyple-common-java-api:2.0-SNAPSHOT") { isChanging = true }
+    implementation("org.eclipse.keyple:keyple-plugin-java-api:2.0-SNAPSHOT") { isChanging = true }
+    implementation("org.eclipse.keyple:keyple-util-java-lib:2.0.0-SNAPSHOT") { isChanging = true }
 
     //android
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -94,7 +101,7 @@ dependencies {
 
     /** Test **/
     testImplementation("androidx.test:core-ktx:1.3.0")
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.9")
     testImplementation("org.robolectric:robolectric:4.3.1")
 
@@ -115,10 +122,6 @@ tasks {
             }
         }
     }
-    val dokkaHtmlJar by registering(Jar::class) {
-        dependsOn(dokkaHtml)
-        archiveClassifier.set("kdoc")
-        from(dokkaHtml)
-    }
 }
 apply(plugin = "org.eclipse.keyple")
+
