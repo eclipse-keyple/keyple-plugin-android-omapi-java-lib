@@ -12,10 +12,11 @@
 package org.eclipse.keyple.plugin.android.omapi
 
 import org.eclipse.keyple.core.plugin.spi.reader.AutonomousSelectionReaderSpi
+import org.eclipse.keyple.core.plugin.spi.reader.ConfigurableReaderSpi
 import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
 import org.eclipse.keyple.core.util.protocol.ContactCardCommonProtocol
 
-internal abstract class AbstractAndroidOmapiReader(private val readerName: String) : AndroidOmapiReader, AutonomousSelectionReaderSpi, ReaderSpi {
+internal abstract class AbstractAndroidOmapiReader(private val readerName: String) : AndroidOmapiReader, ReaderSpi, AutonomousSelectionReaderSpi, ConfigurableReaderSpi {
 
     override fun getName(): String {
         return readerName
