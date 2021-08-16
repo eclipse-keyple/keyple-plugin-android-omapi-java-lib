@@ -12,32 +12,12 @@
 package org.eclipse.keyple.plugin.android.omapi
 
 import org.eclipse.keyple.core.plugin.spi.reader.AutonomousSelectionReaderSpi
-import org.eclipse.keyple.core.plugin.spi.reader.ConfigurableReaderSpi
 import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
-import org.eclipse.keyple.core.util.protocol.ContactCardCommonProtocol
 
-internal abstract class AbstractAndroidOmapiReader(private val readerName: String) : AndroidOmapiReader, ReaderSpi, AutonomousSelectionReaderSpi, ConfigurableReaderSpi {
+internal abstract class AbstractAndroidOmapiReader(private val readerName: String) : AndroidOmapiReader, ReaderSpi, AutonomousSelectionReaderSpi {
 
     override fun getName(): String {
         return readerName
-    }
-
-    override fun isProtocolSupported(readerProtocol: String?): Boolean {
-        return ContactCardCommonProtocol.ISO_7816_3.name == readerProtocol
-    }
-
-    override fun activateProtocol(readerProtocol: String?) {
-        // OMAPI only support ContactCardCommonProtocol.ISO_7816_3
-        // Do nothing
-    }
-
-    override fun deactivateProtocol(readerProtocol: String?) {
-        // OMAPI only support ContactCardCommonProtocol.ISO_7816_3
-        // Do nothing
-    }
-
-    override fun isCurrentProtocol(readerProtocol: String): Boolean {
-        return ContactCardCommonProtocol.ISO_7816_3.name == readerProtocol
     }
 
     override fun isContactless(): Boolean {
