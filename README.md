@@ -1,14 +1,22 @@
-# Keyple Java Plugin Android OMAPI
+# Keyple Plugin Android OMAPI Java Library
 
 ## Overview
 
-The **Keyple Java Plugin Android OMAPI** contains interfaces and classes to manage Android OMAPI readers within a Keyple application.
+The **Keyple Plugin Android OMAPI** Java library contains interfaces and classes to manage Android OMAPI readers within a Keyple application.
 
 This library **should be imported explicitly** by the main application.
 
 ## User Guide & Download Information
 
 The full documentation, including download information is available in the **Documentation** section of the official Keyple website [keyple.org](https://keyple.org)
+
+## Javadoc
+
+The javadoc is available online: [eclipse.github.io/keyple-plugin-omapi-java-lib/](https://eclipse.github.io/keyple-plugin-omapi-java-lib/)
+
+## Examples
+
+Examples of implementation are available in the following repository: [github.com/eclipse/keyple-java-example](https://github.com/eclipse/keyple-java-example)
 
 ## Build the Code
 
