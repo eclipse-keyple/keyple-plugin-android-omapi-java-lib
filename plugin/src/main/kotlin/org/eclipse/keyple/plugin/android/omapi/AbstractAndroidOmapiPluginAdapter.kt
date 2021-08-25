@@ -19,7 +19,7 @@ import timber.log.Timber
 /**
  * The AndroidOmapiPlugin interface provides the public elements used to manage the Android OMAPI plugin.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPlugin, PluginSpi {
 

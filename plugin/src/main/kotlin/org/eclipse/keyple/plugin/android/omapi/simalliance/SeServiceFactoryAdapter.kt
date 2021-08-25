@@ -18,7 +18,7 @@ import org.simalliance.openmobileapi.SEService
 /**
  * Implementation of [SeServiceFactory] using org.simalliance.openmobileapi
  *
- * @since 2.0
+ * @since 2.0.0
  */
 internal class SeServiceFactoryAdapter(private val applicationContext: Context) : SeServiceFactory<SEService, SEService.CallBack> {
 

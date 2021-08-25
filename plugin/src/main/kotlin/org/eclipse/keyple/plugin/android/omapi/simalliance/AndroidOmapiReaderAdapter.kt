@@ -33,7 +33,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun openChannelForAid(aid: ByteArray?, isoControlMask: Byte): ByteArray {
         if (aid == null) {
@@ -91,7 +91,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun closeLogicalChannel() {
         session?.closeChannels()
@@ -100,7 +100,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun getPowerOnData(): String {
         val atr = session?.atr
@@ -114,7 +114,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     @Throws(ReaderIOException::class)
     public override fun openPhysicalChannel() {
@@ -129,7 +129,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun closePhysicalChannel() {
         openChannel?.let {
@@ -141,7 +141,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun isPhysicalChannelOpen(): Boolean {
         return session?.isClosed == false
@@ -150,7 +150,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun checkCardPresence(): Boolean {
         return nativeReader.isSecureElementPresent
@@ -159,7 +159,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     @Throws(ReaderIOException::class)
     override fun transmitApdu(apduIn: ByteArray): ByteArray {
@@ -182,7 +182,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun onUnregister() {
         // NOTHING TO DO

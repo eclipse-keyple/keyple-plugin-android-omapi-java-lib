@@ -21,7 +21,7 @@ import timber.log.Timber
 /**
  * Implementation of AbstractAndroidOmapiPlugin using the Android 9+ OMAPI implementation of Reader and SeService objects.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 @RequiresApi(android.os.Build.VERSION_CODES.P) // OS version providing android.se.omapi package
 internal object AndroidOmapiPluginAdapter : AbstractAndroidOmapiPluginAdapter<android.se.omapi.Reader, SEService>() {

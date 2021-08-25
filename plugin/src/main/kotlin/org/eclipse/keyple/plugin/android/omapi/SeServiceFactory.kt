@@ -15,7 +15,7 @@ package org.eclipse.keyple.plugin.android.omapi
  * Se Service Factory provide a framework to implement the connection the card using an OMAPI
  * interface.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 internal interface SeServiceFactory<T, V> {
 
@@ -25,7 +25,7 @@ internal interface SeServiceFactory<T, V> {
      * @param callBack: Callback or Listener provided by OMAPI
      * @return reader: Object of type Reader of OMAPI
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     fun connectToSe(callBack: V): T
 }

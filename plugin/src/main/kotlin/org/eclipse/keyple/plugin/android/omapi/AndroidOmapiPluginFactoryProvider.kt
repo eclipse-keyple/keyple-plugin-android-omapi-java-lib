@@ -26,7 +26,7 @@ import android.app.Activity
  * @property activity Any Android activity.
  * @property callback Triggered when the reader is ready
  * @constructor Builds instances of [AndroidOmapiPluginFactory] from context provided in constructor.
- * @since 2.0
+ * @since 2.0.0
  */
 class AndroidOmapiPluginFactoryProvider(private val activity: Activity, callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory {
 
@@ -36,7 +36,7 @@ class AndroidOmapiPluginFactoryProvider(private val activity: Activity, callback
      * Returns an instance of [AndroidOmapiPluginFactory].
      *
      * @return A [AndroidOmapiPluginFactory]
-     * @since 2.0
+     * @since 2.0.0
      */
     fun getFactory(): AndroidOmapiPluginFactory {
         return factoryAdapter

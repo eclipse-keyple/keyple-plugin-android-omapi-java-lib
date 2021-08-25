@@ -55,7 +55,7 @@ internal class AndroidOmapiPluginFactoryAdapter(private val context: Context, ca
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun getPluginApiVersion(): String {
         return PluginApiProperties.VERSION
@@ -64,7 +64,7 @@ internal class AndroidOmapiPluginFactoryAdapter(private val context: Context, ca
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun getCommonApiVersion(): String {
         return CommonApiProperties.VERSION
@@ -73,7 +73,7 @@ internal class AndroidOmapiPluginFactoryAdapter(private val context: Context, ca
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun getPluginName(): String {
         return AndroidOmapiPlugin.PLUGIN_NAME
@@ -82,7 +82,7 @@ internal class AndroidOmapiPluginFactoryAdapter(private val context: Context, ca
     /**
      * {@inheritDoc}
      *
-     * @since 2.0
+     * @since 2.0.0
      */
     override fun getPlugin(): PluginSpi {
         return readerPlugin

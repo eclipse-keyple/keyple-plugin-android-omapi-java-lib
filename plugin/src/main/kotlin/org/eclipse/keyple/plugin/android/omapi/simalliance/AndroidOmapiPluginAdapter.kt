@@ -20,7 +20,7 @@ import timber.log.Timber
 /**
  * Implementation of AbstractAndroidOmapiPlugin using the SIMALLIANCE OMAPI implementation of Reader and SeService objects.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 internal object AndroidOmapiPluginAdapter : AbstractAndroidOmapiPluginAdapter<org.simalliance.openmobileapi.Reader, SEService>() {
 

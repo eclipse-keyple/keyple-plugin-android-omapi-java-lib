@@ -20,7 +20,7 @@ import org.eclipse.keyple.plugin.android.omapi.SeServiceFactory
 /**
  * Implementation of [SeServiceFactory] using android.se.omapi
  *
- * @since 2.0
+ * @since 2.0.0
  */
 internal class SeServiceFactoryAdapter(private val applicationContext: Context) : SeServiceFactory<SEService, SEService.OnConnectedListener> {
 

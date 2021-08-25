@@ -17,6 +17,6 @@ import org.eclipse.keyple.core.common.KeyplePluginExtensionFactory
  * Interface for the OMAPI Plugin Factory. Use  [AndroidOmapiPluginFactoryProvider]
  * an instance of it.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 interface AndroidOmapiPluginFactory : KeyplePluginExtensionFactory

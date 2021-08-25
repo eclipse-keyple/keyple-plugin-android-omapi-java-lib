@@ -16,7 +16,7 @@ import org.eclipse.keyple.core.common.KeypleReaderExtension
 /**
  * Generic type for a Keyple Android OMAPI reader extension.
  *
- * @since 2.0
+ * @since 2.0.0
  */
 interface AndroidOmapiReader : KeypleReaderExtension {
     companion object {
