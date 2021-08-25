@@ -29,18 +29,39 @@ http://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.html
 
 SPDX-License-Identifier: EPL-2.0
 
-## Contributors
-
-* Pierre Terrée - API specification
-* Jean-Pierre Fortune - Keyple Core, Keyple Calypso, PCSC plugin and Stub plugin
-* Olivier Delcroix - Keyple Distributed and Android plugins
-* Florent Clairambault - Keyple Core
-* Paulo Barreto - Integration and Demo apps
-* Meddy Menzikoff - Android plugins and Examples
-* Andrei Cristea - Keyple Core, Keyple Distributed and Keyple Calypso
-* Youssef Amrani - Android plugins and demo apps
-* Brice Ruppen - DevOps
-   
 ## Third-party Content
 
-No third-party content.
+SIMalliance Open Mobile API for Android (3.2):
+
+* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* Project: https://github.com/seek-for-android/pool/wiki/UsingSmartCardAPI
+
+Android Appcompat (1.2.0)
+
+* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* Sources: https://github.com/androidx-releases/Appcompat
+
+Android Legacy Support (1.0.0)
+
+* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* Project: https://developer.android.com/jetpack/androidx/releases/legacy
+
+Kotlin Standard Library (1.4.20)
+
+* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* Sources: https://github.com/JetBrains/kotlin
+
+SLF4J API (1.7.32)
+
+* License: [MIT](https://spdx.org/licenses/MIT.html)
+* Project: http://www.slf4j.org
+
+Timber (4.7.1):
+
+* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* Sources: https://github.com/JakeWharton/timber
+
+SLF4J Timber (3.1):
+
+* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* Sources: https://github.com/arcao/slf4j-timber
