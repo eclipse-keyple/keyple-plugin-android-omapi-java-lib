@@ -8,9 +8,9 @@ The **Keyple Plugin Android OMAPI Java Library** is an add-on to allow an applic
 
 The full documentation, including the **user guide**, **download information** and **contribution guide**, is available on the Keyple website [keyple.org](https://keyple.org).
 
-## Javadoc
+## API documentation
 
-The javadoc is available online: [eclipse.github.io/keyple-plugin-omapi-java-lib/](https://eclipse.github.io/keyple-plugin-omapi-java-lib/)
+API documentation & class diagram is available online: [eclipse.github.io/keyple-plugin-omapi-java-lib](https://eclipse.github.io/keyple-plugin-omapi-java-lib)
 
 ## Examples
 
