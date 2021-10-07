@@ -23,6 +23,11 @@ pipeline {
         sh 'git lfs fetch && git lfs checkout'
       }
     } } }
+    stage('Check version') {
+      steps { container('java-builder') {
+        sh "./scripts/check_version.sh ${env.KEYPLE_VERSION}"
+      } }
+    }
     stage('Build and Test') {
       when { expression { !deploySnapshot && !deployRelease } }
       steps { container('java-builder') {
