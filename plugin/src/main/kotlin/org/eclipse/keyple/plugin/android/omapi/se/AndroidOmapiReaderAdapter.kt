@@ -17,7 +17,7 @@ import android.se.omapi.Session
 import androidx.annotation.RequiresApi
 import java.io.IOException
 import org.eclipse.keyple.core.plugin.ReaderIOException
-import org.eclipse.keyple.core.util.ByteArrayUtil
+import org.eclipse.keyple.core.util.HexUtil
 import org.eclipse.keyple.plugin.android.omapi.AbstractAndroidOmapiReader
 import timber.log.Timber
 
@@ -40,7 +40,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
             throw ReaderIOException("IOException while opening basic channel.")
         } catch (e: SecurityException) {
             Timber.e(e, "SecurityException")
-            throw ReaderIOException("Error while opening basic channel, DFNAME = " + ByteArrayUtil.toHex(aid), e.cause)
+            throw ReaderIOException("Error while opening basic channel, DFNAME = " + HexUtil.toHex(aid), e.cause)
         }
 
             if (openChannel == null) {
@@ -48,7 +48,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
             }
         } else {
             Timber.i("[%s] openLogicalChannel => Select Application with AID = %s",
-                this.name, ByteArrayUtil.toHex(aid))
+                this.name, HexUtil.toHex(aid))
             try {
                 openChannel =
                     session?.openLogicalChannel(aid, isoControlMask)
@@ -58,10 +58,10 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
             } catch (e: NoSuchElementException) {
                 Timber.e(e, "NoSuchElementException")
                 throw java.lang.IllegalArgumentException(
-                    "NoSuchElementException: " + ByteArrayUtil.toHex(aid), e)
+                    "NoSuchElementException: " + HexUtil.toHex(aid), e)
             } catch (e: SecurityException) {
                 Timber.e(e, "SecurityException")
-                throw ReaderIOException("SecurityException while opening logical channel, aid :" + ByteArrayUtil.toHex(aid), e.cause)
+                throw ReaderIOException("SecurityException while opening logical channel, aid :" + HexUtil.toHex(aid), e.cause)
             }
 
             if (openChannel == null) {
@@ -134,7 +134,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     override fun getPowerOnData(): String {
         val atr = session?.atr
         return if (atr != null) {
-            val sAtr = ByteArrayUtil.toHex(atr)
+            val sAtr = HexUtil.toHex(atr)
             Timber.i("Retrieving ATR from session: $sAtr")
             sAtr
         } else ""
@@ -149,7 +149,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     override fun transmitApdu(apduIn: ByteArray): ByteArray {
         // Initialization
         Timber.d("Data Length to be sent to tag : %s", apduIn.size)
-        Timber.d("Data in : %s", ByteArrayUtil.toHex(apduIn))
+        Timber.d("Data in : %s", HexUtil.toHex(apduIn))
         var dataOut = byteArrayOf(0)
         try {
             openChannel.let {
@@ -159,7 +159,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
             throw ReaderIOException("Error while transmitting APDU", e)
         }
 
-        Timber.d("Data out : %s", ByteArrayUtil.toHex(dataOut))
+        Timber.d("Data out : %s", HexUtil.toHex(dataOut))
         return dataOut
     }
 
