@@ -6,7 +6,6 @@ plugins {
     id("kotlin-android")
     kotlin("android.extensions")
     id("org.jetbrains.dokka")
-    jacoco
     id("com.diffplug.spotless")
 }
 
@@ -35,7 +34,6 @@ android {
     buildTypes {
         getByName("release") {
             minifyEnabled(false)
-            isTestCoverageEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

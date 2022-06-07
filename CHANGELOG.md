@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - "CHANGELOG.md" file (issue [eclipse/keyple#6]).
 - CI: Forbid the publication of a version already released (issue [#3]).
+### Fixed
+- Removal of the unused Jacoco plugin for compiling Android applications that had an unwanted side effect when the application was launched (stacktrace with warnings).
 ### Upgraded
 - "Keyple Util Library" to version `2.1.0` by removing the use of deprecated methods.
 
