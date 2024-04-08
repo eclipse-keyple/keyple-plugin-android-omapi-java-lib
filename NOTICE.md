@@ -6,8 +6,8 @@ This content is produced and maintained by the Eclipse Keyple project.
  
 ## Supported platforms
 
-* Java SE 1.6 compact2
-* Android 4.4 KitKat API level 19
+* Java 1.8
+* Android 7.0 Nougat API Level 24
 
 ## Trademarks
  
@@ -31,37 +31,12 @@ SPDX-License-Identifier: EPL-2.0
 
 ## Third-party Content
 
-SIMalliance Open Mobile API for Android (3.2):
+SIMalliance Open Mobile API for Android
 
 * License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 * Project: https://github.com/seek-for-android/pool/wiki/UsingSmartCardAPI
 
-Android Appcompat (1.2.0)
-
-* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
-* Sources: https://github.com/androidx-releases/Appcompat
-
-Android Legacy Support (1.0.0)
-
-* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
-* Project: https://developer.android.com/jetpack/androidx/releases/legacy
-
-Kotlin Standard Library (1.4.20)
-
-* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
-* Sources: https://github.com/JetBrains/kotlin
-
-SLF4J API (1.7.32)
+SLF4J API
 
 * License: [MIT](https://spdx.org/licenses/MIT.html)
 * Project: http://www.slf4j.org
-
-Timber (4.7.1):
-
-* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
-* Sources: https://github.com/JakeWharton/timber
-
-SLF4J Timber (3.1):
-
-* License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
-* Sources: https://github.com/arcao/slf4j-timber

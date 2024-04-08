@@ -20,71 +20,72 @@ import org.eclipse.keyple.core.plugin.PluginIOException
 import org.eclipse.keyple.core.plugin.spi.PluginFactorySpi
 import org.eclipse.keyple.core.plugin.spi.PluginSpi
 
-internal class AndroidOmapiPluginFactoryAdapter(private val context: Context, callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory, PluginFactorySpi {
+internal class AndroidOmapiPluginFactoryAdapter(
+    private val context: Context,
+    callback: (AndroidOmapiPluginFactory) -> Unit
+) : AndroidOmapiPluginFactory, PluginFactorySpi {
 
-    private var sdkVersion: Int = Build.VERSION.SDK_INT
-    private var readerPlugin: AbstractAndroidOmapiPluginAdapter<*, *>
+  private var sdkVersion: Int = Build.VERSION.SDK_INT
+  private var readerPlugin: AbstractAndroidOmapiPluginAdapter<*, *>
 
-    companion object {
-        const val SIMALLIANCE_OMAPI_PACKAGE_NAME = "org.simalliance.openmobileapi.service"
+  companion object {
+    const val SIMALLIANCE_OMAPI_PACKAGE_NAME = "org.simalliance.openmobileapi.service"
+  }
+
+  init {
+    readerPlugin = getPluginRegardingOsVersion()
+    readerPlugin.init(context) { callback(this) }
+  }
+
+  private fun getPluginRegardingOsVersion(): AbstractAndroidOmapiPluginAdapter<*, *> {
+    return if (sdkVersion >= Build.VERSION_CODES.P)
+        org.eclipse.keyple.plugin.android.omapi.se.AndroidOmapiPluginAdapter
+    else getPluginRegardingPackages()
+  }
+
+  @Throws(PluginIOException::class)
+  private fun getPluginRegardingPackages(): AbstractAndroidOmapiPluginAdapter<*, *> {
+    return try {
+      context.packageManager.getPackageInfo(SIMALLIANCE_OMAPI_PACKAGE_NAME, 0)
+      org.eclipse.keyple.plugin.android.omapi.simalliance.AndroidOmapiPluginAdapter
+    } catch (e2: PackageManager.NameNotFoundException) {
+      throw PluginIOException("No OMAPI lib available within the OS")
     }
+  }
 
-    init {
-        readerPlugin = getPluginRegardingOsVersion()
-        readerPlugin.init(context) { callback(this) }
-    }
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun getPluginApiVersion(): String {
+    return PluginApiProperties.VERSION
+  }
 
-    private fun getPluginRegardingOsVersion(): AbstractAndroidOmapiPluginAdapter<*, *> {
-        return if (sdkVersion >= Build.VERSION_CODES.P)
-            org.eclipse.keyple.plugin.android.omapi.se.AndroidOmapiPluginAdapter
-        else
-            getPluginRegardingPackages()
-    }
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun getCommonApiVersion(): String {
+    return CommonApiProperties.VERSION
+  }
 
-    @Throws(PluginIOException::class)
-    private fun getPluginRegardingPackages(): AbstractAndroidOmapiPluginAdapter<*, *> {
-        return try {
-            context.packageManager
-                .getPackageInfo(SIMALLIANCE_OMAPI_PACKAGE_NAME, 0)
-            org.eclipse.keyple.plugin.android.omapi.simalliance.AndroidOmapiPluginAdapter
-        } catch (e2: PackageManager.NameNotFoundException) {
-            throw PluginIOException("No OMAPI lib available within the OS")
-        }
-    }
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun getPluginName(): String {
+    return AndroidOmapiPlugin.PLUGIN_NAME
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun getPluginApiVersion(): String {
-        return PluginApiProperties.VERSION
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun getCommonApiVersion(): String {
-        return CommonApiProperties.VERSION
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun getPluginName(): String {
-        return AndroidOmapiPlugin.PLUGIN_NAME
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun getPlugin(): PluginSpi {
-        return readerPlugin
-    }
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun getPlugin(): PluginSpi {
+    return readerPlugin
+  }
 }

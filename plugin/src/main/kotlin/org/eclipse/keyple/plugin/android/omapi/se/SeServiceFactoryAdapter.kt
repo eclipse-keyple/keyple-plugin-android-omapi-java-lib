@@ -22,10 +22,11 @@ import org.eclipse.keyple.plugin.android.omapi.SeServiceFactory
  *
  * @since 2.0.0
  */
-internal class SeServiceFactoryAdapter(private val applicationContext: Context) : SeServiceFactory<SEService, SEService.OnConnectedListener> {
+internal class SeServiceFactoryAdapter(private val applicationContext: Context) :
+    SeServiceFactory<SEService, SEService.OnConnectedListener> {
 
-    @RequiresApi(android.os.Build.VERSION_CODES.P)
-    override fun connectToSe(callBack: SEService.OnConnectedListener): SEService {
-        return SEService(applicationContext, Executors.newSingleThreadExecutor(), callBack)
-    }
+  @RequiresApi(android.os.Build.VERSION_CODES.P)
+  override fun connectToSe(callBack: SEService.OnConnectedListener): SEService {
+    return SEService(applicationContext, Executors.newSingleThreadExecutor(), callBack)
+  }
 }

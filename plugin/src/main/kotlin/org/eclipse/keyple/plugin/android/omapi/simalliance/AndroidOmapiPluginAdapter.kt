@@ -15,31 +15,38 @@ import android.content.Context
 import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
 import org.eclipse.keyple.plugin.android.omapi.AbstractAndroidOmapiPluginAdapter
 import org.simalliance.openmobileapi.SEService
-import timber.log.Timber
+import org.slf4j.LoggerFactory
 
 /**
- * Implementation of AbstractAndroidOmapiPlugin using the SIMALLIANCE OMAPI implementation of Reader and SeService objects.
+ * Implementation of AbstractAndroidOmapiPlugin using the SIMALLIANCE OMAPI implementation of Reader
+ * and SeService objects.
  *
  * @since 2.0.0
  */
-internal object AndroidOmapiPluginAdapter : AbstractAndroidOmapiPluginAdapter<org.simalliance.openmobileapi.Reader, SEService>() {
+internal object AndroidOmapiPluginAdapter :
+    AbstractAndroidOmapiPluginAdapter<org.simalliance.openmobileapi.Reader, SEService>() {
 
-    override fun connectToSe(context: Context, callback: () -> Unit) {
-        val seServiceFactory = SeServiceFactoryAdapter(context)
-        seService = seServiceFactory.connectToSe(SEService.CallBack {
-            Timber.i("Connected, ready to register plugin")
-            Timber.i("OMAPI SEService version: %s", seService?.version)
-            callback()
-        })
-    }
+  private val logger = LoggerFactory.getLogger(AndroidOmapiPluginAdapter::class.java)
 
-    override fun getNativeReaders(): Array<org.simalliance.openmobileapi.Reader>? {
-        return seService?.readers
-    }
+  override fun connectToSe(context: Context, callback: () -> Unit) {
+    val seServiceFactory = SeServiceFactoryAdapter(context)
+    seService =
+        seServiceFactory.connectToSe(
+            SEService.CallBack {
+              logger.info("Connected, ready to register plugin")
+              logger.info("OMAPI SEService version: {}", seService?.version)
+              callback()
+            })
+  }
 
-    override fun mapToReader(nativeReader: org.simalliance.openmobileapi.Reader): ReaderSpi {
-        Timber.d("Reader available name : %s", nativeReader.name)
-        Timber.d("Reader available isCardPresent : %S", nativeReader.isSecureElementPresent)
-        return AndroidOmapiReaderAdapter(nativeReader, mapNativeReaderNameToKeypleReaderName(nativeReader.name))
-    }
+  override fun getNativeReaders(): Array<org.simalliance.openmobileapi.Reader>? {
+    return seService?.readers
+  }
+
+  override fun mapToReader(nativeReader: org.simalliance.openmobileapi.Reader): ReaderSpi {
+    logger.debug("Reader available name: {}", nativeReader.name)
+    logger.debug("Reader available isCardPresent: {}", nativeReader.isSecureElementPresent)
+    return AndroidOmapiReaderAdapter(
+        nativeReader, mapNativeReaderNameToKeypleReaderName(nativeReader.name))
+  }
 }

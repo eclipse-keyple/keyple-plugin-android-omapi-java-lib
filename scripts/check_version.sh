@@ -1,7 +1,7 @@
 #!/bin/sh
 
 version=$1
-echo "Input version : '$version'"
+echo "Input version: '$version'"
 
 echo "Fetch tags..."
 git fetch --tags

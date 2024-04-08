@@ -14,67 +14,72 @@ package org.eclipse.keyple.plugin.android.omapi
 import android.content.Context
 import org.eclipse.keyple.core.plugin.spi.PluginSpi
 import org.eclipse.keyple.core.plugin.spi.reader.ReaderSpi
-import timber.log.Timber
+import org.slf4j.LoggerFactory
 
 /**
- * The AndroidOmapiPlugin interface provides the public elements used to manage the Android OMAPI plugin.
+ * The AndroidOmapiPlugin interface provides the public elements used to manage the Android OMAPI
+ * plugin.
  *
  * @since 2.0.0
  */
 internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPlugin, PluginSpi {
 
-    abstract fun connectToSe(context: Context, callback: () -> Unit)
-    abstract fun getNativeReaders(): Array<T>?
-    abstract fun mapToReader(nativeReader: T): ReaderSpi
+  private val logger = LoggerFactory.getLogger(AbstractAndroidOmapiPluginAdapter::class.java)
 
-    protected var seService: V? = null
-    private val params = mutableMapOf<String, String>()
+  abstract fun connectToSe(context: Context, callback: () -> Unit)
 
-    /**
-     * Initialize plugin by connecting to [SEService]
-     *
-     * @since 0.9
-     */
-    fun init(context: Context, callback: () -> Unit) {
-        return if (seService != null) {
-            callback()
-        } else {
-            Timber.d("Connect to a card")
-            connectToSe(context.applicationContext, callback)
-        }
+  abstract fun getNativeReaders(): Array<T>?
+
+  abstract fun mapToReader(nativeReader: T): ReaderSpi
+
+  protected var seService: V? = null
+  private val params = mutableMapOf<String, String>()
+
+  /**
+   * Initialize plugin by connecting to [SEService]
+   *
+   * @since 0.9
+   */
+  fun init(context: Context, callback: () -> Unit) {
+    return if (seService != null) {
+      callback()
+    } else {
+      logger.debug("Connect to a card")
+      connectToSe(context.applicationContext, callback)
     }
+  }
 
-    override fun searchAvailableReaders(): MutableSet<ReaderSpi> {
-        Timber.d("searchAvailableReaders")
-        val readerSpis = HashSet<ReaderSpi>()
-        getNativeReaders()?.forEach { nativeReader ->
-            val reader = mapToReader(nativeReader)
-            readerSpis.add(reader)
-        }
-        return readerSpis
+  override fun searchAvailableReaders(): MutableSet<ReaderSpi> {
+    logger.debug("searchAvailableReaders")
+    val readerSpis = HashSet<ReaderSpi>()
+    getNativeReaders()?.forEach { nativeReader ->
+      val reader = mapToReader(nativeReader)
+      readerSpis.add(reader)
     }
+    return readerSpis
+  }
 
-    override fun getName(): String {
-        return AndroidOmapiPlugin.PLUGIN_NAME
-    }
+  override fun getName(): String {
+    return AndroidOmapiPlugin.PLUGIN_NAME
+  }
 
-    override fun onUnregister() {
-        // DO nothing
-    }
+  override fun onUnregister() {
+    // DO nothing
+  }
 
-    /**
-     * Map Native reader name (SIM, SIM1,SIM2,ESE) to Keyple reader name const
-     * Return nativeReaderName if no mapping found
-     */
-    protected fun mapNativeReaderNameToKeypleReaderName(nativeReaderName: String): String {
-        return if (nativeReaderName.equals("SIM", true) || nativeReaderName.equals("SIM1", true)) {
-            AndroidOmapiReader.READER_NAME_SIM_1
-        } else if (nativeReaderName.equals("SIM2", true)) {
-            AndroidOmapiReader.READER_NAME_SIM_2
-        } else if (nativeReaderName.equals("ESE", true)) {
-            AndroidOmapiReader.READER_NAME_ESE
-        } else {
-            nativeReaderName
-        }
+  /**
+   * Map Native reader name (SIM, SIM1,SIM2,ESE) to Keyple reader name const Return nativeReaderName
+   * if no mapping found
+   */
+  protected fun mapNativeReaderNameToKeypleReaderName(nativeReaderName: String): String {
+    return if (nativeReaderName.equals("SIM", true) || nativeReaderName.equals("SIM1", true)) {
+      AndroidOmapiReader.READER_NAME_SIM_1
+    } else if (nativeReaderName.equals("SIM2", true)) {
+      AndroidOmapiReader.READER_NAME_SIM_2
+    } else if (nativeReaderName.equals("ESE", true)) {
+      AndroidOmapiReader.READER_NAME_ESE
+    } else {
+      nativeReaderName
     }
+  }
 }

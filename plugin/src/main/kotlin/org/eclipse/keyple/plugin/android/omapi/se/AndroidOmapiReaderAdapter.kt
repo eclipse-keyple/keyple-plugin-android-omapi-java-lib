@@ -19,156 +19,154 @@ import java.io.IOException
 import org.eclipse.keyple.core.plugin.ReaderIOException
 import org.eclipse.keyple.core.util.HexUtil
 import org.eclipse.keyple.plugin.android.omapi.AbstractAndroidOmapiReader
-import timber.log.Timber
+import org.slf4j.LoggerFactory
 
 @RequiresApi(android.os.Build.VERSION_CODES.P)
-internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, readerName: String) : AbstractAndroidOmapiReader(readerName) {
+internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, readerName: String) :
+    AbstractAndroidOmapiReader(readerName) {
 
-    private var session: Session? = null
-    private var openChannel: Channel? = null
+  private val logger = LoggerFactory.getLogger(AndroidOmapiReaderAdapter::class.java)
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun openChannelForAid(aid: ByteArray?, isoControlMask: Byte): ByteArray? {
-        if (aid == null) { try {
-            openChannel = session?.openBasicChannel(null)
-        } catch (e: IOException) {
-            Timber.e(e, "IOException")
-            throw ReaderIOException("IOException while opening basic channel.")
-        } catch (e: SecurityException) {
-            Timber.e(e, "SecurityException")
-            throw ReaderIOException("Error while opening basic channel, DFNAME = " + HexUtil.toHex(aid), e.cause)
-        }
+  private var session: Session? = null
+  private var openChannel: Channel? = null
 
-            if (openChannel == null) {
-                throw ReaderIOException("Failed to open a basic channel.")
-            }
-        } else {
-            Timber.i("[%s] openLogicalChannel => Select Application with AID = %s",
-                this.name, HexUtil.toHex(aid))
-            try {
-                openChannel =
-                    session?.openLogicalChannel(aid, isoControlMask)
-            } catch (e: IOException) {
-                Timber.e(e, "IOException")
-                throw ReaderIOException("IOException while opening logical channel.")
-            } catch (e: NoSuchElementException) {
-                Timber.e(e, "NoSuchElementException")
-                throw java.lang.IllegalArgumentException(
-                    "NoSuchElementException: " + HexUtil.toHex(aid), e)
-            } catch (e: SecurityException) {
-                Timber.e(e, "SecurityException")
-                throw ReaderIOException("SecurityException while opening logical channel, aid :" + HexUtil.toHex(aid), e.cause)
-            }
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun openChannelForAid(aid: ByteArray?, isoControlMask: Byte): ByteArray? {
+    if (aid == null) {
+      try {
+        openChannel = session?.openBasicChannel(null)
+      } catch (e: IOException) {
+        throw ReaderIOException("IOException while opening basic channel.")
+      } catch (e: SecurityException) {
+        throw ReaderIOException(
+            "Error while opening basic channel, DFNAME = " + HexUtil.toHex(aid), e.cause)
+      }
 
-            if (openChannel == null) {
-                throw ReaderIOException("Failed to open a logical channel.")
-            }
-        }
-        /* get the FCI and build an ApduResponse */
-        return openChannel?.selectResponse
+      if (openChannel == null) {
+        throw ReaderIOException("Failed to open a basic channel.")
+      }
+    } else {
+      logger.info(
+          "[%s] openLogicalChannel => Select Application with AID = %s",
+          this.name,
+          HexUtil.toHex(aid))
+      try {
+        openChannel = session?.openLogicalChannel(aid, isoControlMask)
+      } catch (e: IOException) {
+        throw ReaderIOException("IOException while opening logical channel.")
+      } catch (e: NoSuchElementException) {
+        throw java.lang.IllegalArgumentException("NoSuchElementException: " + HexUtil.toHex(aid), e)
+      } catch (e: SecurityException) {
+        throw ReaderIOException(
+            "SecurityException while opening logical channel, aid:" + HexUtil.toHex(aid), e.cause)
+      }
+
+      if (openChannel == null) {
+        throw ReaderIOException("Failed to open a logical channel.")
+      }
+    }
+    /* get the FCI and build an ApduResponse */
+    return openChannel?.selectResponse
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun closeLogicalChannel() {
+    session?.closeChannels()
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  @Throws(ReaderIOException::class)
+  override fun openPhysicalChannel() {
+    try {
+      session = nativeReader.openSession()
+    } catch (e: ReaderIOException) {
+      throw ReaderIOException("IOException while opening physical channel.", e)
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun closePhysicalChannel() {
+    openChannel?.let {
+      it.session.close()
+      openChannel = null
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun isPhysicalChannelOpen(): Boolean {
+    return session?.isClosed == false
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun checkCardPresence(): Boolean {
+    return nativeReader.isSecureElementPresent
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun getPowerOnData(): String {
+    val atr = session?.atr
+    return if (atr != null) {
+      val sAtr = HexUtil.toHex(atr)
+      logger.info("Retrieving ATR from session: {}", sAtr)
+      sAtr
+    } else ""
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  @Throws(ReaderIOException::class)
+  override fun transmitApdu(apduIn: ByteArray): ByteArray {
+    // Initialization
+    logger.debug("Data Length to be sent to tag: {}", apduIn.size)
+    logger.debug("Data in: {}", HexUtil.toHex(apduIn))
+    var dataOut = byteArrayOf(0)
+    try {
+      openChannel.let { dataOut = it?.transmit(apduIn) ?: throw IOException("Channel is not open") }
+    } catch (e: IOException) {
+      throw ReaderIOException("Error while transmitting APDU", e)
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun closeLogicalChannel() {
-        session?.closeChannels()
-    }
+    logger.debug("Data out : {}", HexUtil.toHex(dataOut))
+    return dataOut
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    @Throws(ReaderIOException::class)
-    override fun openPhysicalChannel() {
-        try {
-            session = nativeReader.openSession()
-        } catch (e: ReaderIOException) {
-            Timber.e(e, "IOException")
-            throw ReaderIOException("IOException while opening physical channel.", e)
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun closePhysicalChannel() {
-        openChannel?.let {
-            it.session.close()
-            openChannel = null
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun isPhysicalChannelOpen(): Boolean {
-        return session?.isClosed == false
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun checkCardPresence(): Boolean {
-        return nativeReader.isSecureElementPresent
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun getPowerOnData(): String {
-        val atr = session?.atr
-        return if (atr != null) {
-            val sAtr = HexUtil.toHex(atr)
-            Timber.i("Retrieving ATR from session: $sAtr")
-            sAtr
-        } else ""
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    @Throws(ReaderIOException::class)
-    override fun transmitApdu(apduIn: ByteArray): ByteArray {
-        // Initialization
-        Timber.d("Data Length to be sent to tag : %s", apduIn.size)
-        Timber.d("Data in : %s", HexUtil.toHex(apduIn))
-        var dataOut = byteArrayOf(0)
-        try {
-            openChannel.let {
-                dataOut = it?.transmit(apduIn) ?: throw IOException("Channel is not open")
-            }
-        } catch (e: IOException) {
-            throw ReaderIOException("Error while transmitting APDU", e)
-        }
-
-        Timber.d("Data out : %s", HexUtil.toHex(dataOut))
-        return dataOut
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 2.0.0
-     */
-    override fun onUnregister() {
-        // NOTHING TO DO
-    }
+  /**
+   * {@inheritDoc}
+   *
+   * @since 2.0.0
+   */
+  override fun onUnregister() {
+    // NOTHING TO DO
+  }
 }

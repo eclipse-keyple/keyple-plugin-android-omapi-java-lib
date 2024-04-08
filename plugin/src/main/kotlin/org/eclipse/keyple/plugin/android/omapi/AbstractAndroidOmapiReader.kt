@@ -13,13 +13,14 @@ package org.eclipse.keyple.plugin.android.omapi
 
 import org.eclipse.keyple.core.plugin.spi.reader.AutonomousSelectionReaderSpi
 
-internal abstract class AbstractAndroidOmapiReader(private val readerName: String) : AndroidOmapiReader, AutonomousSelectionReaderSpi {
+internal abstract class AbstractAndroidOmapiReader(private val readerName: String) :
+    AndroidOmapiReader, AutonomousSelectionReaderSpi {
 
-    override fun getName(): String {
-        return readerName
-    }
+  override fun getName(): String {
+    return readerName
+  }
 
-    override fun isContactless(): Boolean {
-        return false
-    }
+  override fun isContactless(): Boolean {
+    return false
+  }
 }

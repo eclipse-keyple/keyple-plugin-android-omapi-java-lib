@@ -19,9 +19,9 @@ import org.eclipse.keyple.core.common.KeypleReaderExtension
  * @since 2.0.0
  */
 interface AndroidOmapiReader : KeypleReaderExtension {
-    companion object {
-        const val READER_NAME_SIM_1 = "AndroidOmapiReaderSim1"
-        const val READER_NAME_SIM_2 = "AndroidOmapiReaderSim2"
-        const val READER_NAME_ESE = "AndroidOmapiReaderESE"
-    }
+  companion object {
+    const val READER_NAME_SIM_1 = "AndroidOmapiReaderSim1"
+    const val READER_NAME_SIM_2 = "AndroidOmapiReaderSim2"
+    const val READER_NAME_ESE = "AndroidOmapiReaderESE"
+  }
 }

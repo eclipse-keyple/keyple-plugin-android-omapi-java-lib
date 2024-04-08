@@ -17,28 +17,33 @@ import android.app.Activity
  * The following example shows how to create a [AndroidOmapiPluginFactoryFactory] object with the
  * [AndroidOmapiPluginFactoryProvider] and use it to register a Plugin.
  *
- *```
+ * ```
  * AndroidOmapiPluginFactoryProvider(this) {
  *  val plugin = SmartCardServiceProvider.getService().registerPlugin(it)
  * }
- *```
+ * ```
  *
+ * @constructor Builds instances of [AndroidOmapiPluginFactory] from context provided in
+ *   constructor.
  * @property activity Any Android activity.
  * @property callback Triggered when the reader is ready
- * @constructor Builds instances of [AndroidOmapiPluginFactory] from context provided in constructor.
  * @since 2.0.0
  */
-class AndroidOmapiPluginFactoryProvider(private val activity: Activity, callback: (AndroidOmapiPluginFactory) -> Unit) : AndroidOmapiPluginFactory {
+class AndroidOmapiPluginFactoryProvider(
+    private val activity: Activity,
+    callback: (AndroidOmapiPluginFactory) -> Unit
+) : AndroidOmapiPluginFactory {
 
-    private var factoryAdapter: AndroidOmapiPluginFactoryAdapter = AndroidOmapiPluginFactoryAdapter(activity, callback)
+  private var factoryAdapter: AndroidOmapiPluginFactoryAdapter =
+      AndroidOmapiPluginFactoryAdapter(activity, callback)
 
-    /**
-     * Returns an instance of [AndroidOmapiPluginFactory].
-     *
-     * @return A [AndroidOmapiPluginFactory]
-     * @since 2.0.0
-     */
-    fun getFactory(): AndroidOmapiPluginFactory {
-        return factoryAdapter
-    }
+  /**
+   * Returns an instance of [AndroidOmapiPluginFactory].
+   *
+   * @return A [AndroidOmapiPluginFactory]
+   * @since 2.0.0
+   */
+  fun getFactory(): AndroidOmapiPluginFactory {
+    return factoryAdapter
+  }
 }

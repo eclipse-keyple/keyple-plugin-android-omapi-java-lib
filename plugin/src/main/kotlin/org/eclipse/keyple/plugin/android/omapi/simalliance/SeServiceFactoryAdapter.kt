@@ -20,9 +20,10 @@ import org.simalliance.openmobileapi.SEService
  *
  * @since 2.0.0
  */
-internal class SeServiceFactoryAdapter(private val applicationContext: Context) : SeServiceFactory<SEService, SEService.CallBack> {
+internal class SeServiceFactoryAdapter(private val applicationContext: Context) :
+    SeServiceFactory<SEService, SEService.CallBack> {
 
-    override fun connectToSe(callBack: SEService.CallBack): SEService {
-        return SEService(applicationContext, callBack)
-    }
+  override fun connectToSe(callBack: SEService.CallBack): SEService {
+    return SEService(applicationContext, callBack)
+  }
 }
