@@ -71,9 +71,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
     //keyple
-    implementation("org.eclipse.keyple:keyple-common-java-api:2.0.0")
-    implementation("org.eclipse.keyple:keyple-plugin-java-api:2.3.0")
-    implementation("org.eclipse.keyple:keyple-util-java-lib:2.3.1")
+    implementation("org.eclipse.keyple:keyple-common-java-api:2.0.1-SNAPSHOT") {isChanging=true}
+    implementation("org.eclipse.keyple:keyple-plugin-java-api:2.3.1-SNAPSHOT") {isChanging=true}
+    implementation("org.eclipse.keyple:keyple-util-java-lib:2.3.2-SNAPSHOT") {isChanging=true}
 
     //android
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
