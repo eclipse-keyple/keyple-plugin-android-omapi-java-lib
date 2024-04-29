@@ -36,7 +36,7 @@ internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPl
   private val params = mutableMapOf<String, String>()
 
   /**
-   * Initialize plugin by connecting to [SEService]
+   * Initialize plugin
    *
    * @since 0.9
    */
@@ -44,13 +44,13 @@ internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPl
     return if (seService != null) {
       callback()
     } else {
-      logger.debug("Connect to a card")
+      logger.info("Plugin [{}]: connect to SE", name)
       connectToSe(context.applicationContext, callback)
     }
   }
 
   override fun searchAvailableReaders(): MutableSet<ReaderSpi> {
-    logger.debug("searchAvailableReaders")
+    logger.info("Plugin [{}]: search available readers", name)
     val readerSpis = HashSet<ReaderSpi>()
     getNativeReaders()?.forEach { nativeReader ->
       val reader = mapToReader(nativeReader)

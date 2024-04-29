@@ -54,8 +54,8 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
       }
     } else {
       logger.info(
-          "[{}] openLogicalChannel => Select Application with AID = {}",
-          this.getName(),
+          "Reader [{}]: open logical channel, select application with AID [{}]",
+          name,
           HexUtil.toHex(aid))
       try {
         // openLogicalChannel of SimAlliance OMAPI is only available for version 3.0+ of the
@@ -110,7 +110,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     val atr = session?.atr
     return if (atr != null) {
       val sAtr = HexUtil.toHex(atr)
-      logger.info("Retrieving ATR from session: {}", sAtr)
+      logger.info("Reader [{}]: retrieving ATR from session: {}", name, sAtr)
       sAtr
     } else ""
   }
@@ -167,16 +167,19 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
   @Throws(ReaderIOException::class)
   override fun transmitApdu(apduIn: ByteArray): ByteArray {
     // Initialization
-    logger.debug("Data Length to be sent to tag: {}", apduIn.size)
-    logger.debug("Data in: {}", HexUtil.toHex(apduIn))
+    if (logger.isTraceEnabled) {
+      logger.trace("Reader [{}]: transmit APDU: {} bytes", name, apduIn.size)
+      logger.trace("Reader [{}]: data in: {}", name, HexUtil.toHex(apduIn))
+    }
     var dataOut = byteArrayOf(0)
     try {
       openChannel.let { dataOut = it?.transmit(apduIn) ?: throw IOException("Channel is not open") }
     } catch (e: IOException) {
       throw ReaderIOException("Error while transmitting APDU", e)
     }
-
-    logger.debug("Data out: {}", HexUtil.toHex(dataOut))
+    if (logger.isTraceEnabled) {
+      logger.trace("Reader [{}]: data out: {}", name, HexUtil.toHex(dataOut))
+    }
     return dataOut
   }
 
