@@ -23,10 +23,10 @@ import android.app.Activity
  * }
  * ```
  *
- * @constructor Builds instances of [AndroidOmapiPluginFactory] from context provided in
- *   constructor.
  * @property activity Any Android activity.
  * @property callback Triggered when the reader is ready
+ * @constructor Builds instances of [AndroidOmapiPluginFactory] from context provided in
+ *   constructor.
  * @since 2.0.0
  */
 class AndroidOmapiPluginFactoryProvider(
