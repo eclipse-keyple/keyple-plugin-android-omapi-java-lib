@@ -40,33 +40,33 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
       try {
         openChannel = session?.openBasicChannel(null)
       } catch (e: IOException) {
-        throw ReaderIOException("IOException while opening basic channel.")
+        throw ReaderIOException("Failed to open the basic channel", e)
       } catch (e: SecurityException) {
         throw ReaderIOException(
-            "Error while opening basic channel, DFNAME = " + HexUtil.toHex(aid), e.cause)
+            "Failed to open the basic channel. AID: " + HexUtil.toHex(aid), e.cause)
       }
 
       if (openChannel == null) {
-        throw ReaderIOException("Failed to open a basic channel.")
+        throw ReaderIOException("Failed to open the basic channel")
       }
     } else {
-      logger.info(
-          "Reader [{}]: open logical channel, select application with AID [{}]",
-          name,
-          HexUtil.toHex(aid))
+      if (logger.isDebugEnabled) {
+        logger.debug(
+            "[readerExt={}] Opening card physical channel [aid={}]", name, HexUtil.toHex(aid))
+      }
       try {
         openChannel = session?.openLogicalChannel(aid, isoControlMask)
       } catch (e: IOException) {
-        throw ReaderIOException("IOException while opening logical channel.")
+        throw ReaderIOException("Failed to open the logical channel", e)
       } catch (e: NoSuchElementException) {
-        throw java.lang.IllegalArgumentException("NoSuchElementException: " + HexUtil.toHex(aid), e)
+        throw java.lang.IllegalArgumentException("AID not found: " + HexUtil.toHex(aid), e)
       } catch (e: SecurityException) {
         throw ReaderIOException(
-            "SecurityException while opening logical channel, aid:" + HexUtil.toHex(aid), e.cause)
+            "Failed to open the logical channel. AID: " + HexUtil.toHex(aid), e.cause)
       }
 
       if (openChannel == null) {
-        throw ReaderIOException("Failed to open a logical channel.")
+        throw ReaderIOException("Failed to open the logical channel")
       }
     }
     /* get the FCI and build an ApduResponse */
@@ -92,7 +92,7 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     try {
       session = nativeReader.openSession()
     } catch (e: ReaderIOException) {
-      throw ReaderIOException("IOException while opening physical channel.", e)
+      throw ReaderIOException("Failed to open the physical channel", e)
     }
   }
 
@@ -135,7 +135,9 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     val atr = session?.atr
     return if (atr != null) {
       val sAtr = HexUtil.toHex(atr)
-      logger.info("Reader [{}]: retrieving ATR from session: {}", name, sAtr)
+      if (logger.isDebugEnabled) {
+        logger.debug("[readerExt={}] Retrieving ATR [atr={}]", name, sAtr)
+      }
       sAtr
     } else ""
   }
@@ -147,19 +149,11 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
    */
   @Throws(ReaderIOException::class)
   override fun transmitApdu(apduIn: ByteArray): ByteArray {
-    // Initialization
-    if (logger.isTraceEnabled) {
-      logger.trace("Reader [{}]: transmit APDU: {} bytes", name, apduIn.size)
-      logger.trace("Reader [{}]: data in: {}", name, HexUtil.toHex(apduIn))
-    }
     var dataOut = byteArrayOf(0)
     try {
       openChannel.let { dataOut = it?.transmit(apduIn) ?: throw IOException("Channel is not open") }
     } catch (e: IOException) {
-      throw ReaderIOException("Error while transmitting APDU", e)
-    }
-    if (logger.isTraceEnabled) {
-      logger.trace("Reader [{}]: data out: {}", name, HexUtil.toHex(dataOut))
+      throw ReaderIOException("Failed to transmit APDU", e)
     }
     return dataOut
   }
