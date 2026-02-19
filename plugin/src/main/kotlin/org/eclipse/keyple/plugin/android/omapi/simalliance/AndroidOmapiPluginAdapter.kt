@@ -33,10 +33,7 @@ internal object AndroidOmapiPluginAdapter :
     seService =
         seServiceFactory.connectToSe(
             SEService.CallBack {
-              logger.info(
-                  "Plugin [{}]: connected, ready to register plugin, OMAPI SEService version: {}",
-                  name,
-                  seService?.version)
+              logger.info("OMAPI SE Service connected [version={}]", seService?.version)
               callback()
             })
   }
@@ -47,8 +44,7 @@ internal object AndroidOmapiPluginAdapter :
 
   override fun mapToReader(nativeReader: org.simalliance.openmobileapi.Reader): ReaderSpi {
     logger.info(
-        "Plugin [{}]: reader available: [{}], is card present: {}",
-        name,
+        "Reader connected [nativeReader={}, isCardPresent={}]",
         nativeReader.name,
         nativeReader.isSecureElementPresent)
     return AndroidOmapiReaderAdapter(

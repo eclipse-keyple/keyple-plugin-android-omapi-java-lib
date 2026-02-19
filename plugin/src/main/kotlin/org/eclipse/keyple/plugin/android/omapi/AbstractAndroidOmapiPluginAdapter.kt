@@ -44,13 +44,15 @@ internal abstract class AbstractAndroidOmapiPluginAdapter<T, V> : AndroidOmapiPl
     return if (seService != null) {
       callback()
     } else {
-      logger.info("Plugin [{}]: connect to SE", name)
+      logger.info("Connecting to OMAPI SE Service")
       connectToSe(context.applicationContext, callback)
     }
   }
 
   override fun searchAvailableReaders(): MutableSet<ReaderSpi> {
-    logger.info("Plugin [{}]: search available readers", name)
+    if (logger.isTraceEnabled) {
+      logger.trace("Searching available readers")
+    }
     val readerSpis = HashSet<ReaderSpi>()
     getNativeReaders()?.forEach { nativeReader ->
       val reader = mapToReader(nativeReader)
