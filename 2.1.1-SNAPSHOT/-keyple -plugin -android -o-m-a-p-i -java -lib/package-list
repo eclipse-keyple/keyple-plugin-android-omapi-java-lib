@@ -1,0 +1,17 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi////PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/index.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPlugin.Companion///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin/-companion/index.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPlugin.Companion/PLUGIN_NAME/#/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin/-companion/-p-l-u-g-i-n_-n-a-m-e.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPlugin///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin/index.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPluginFactory///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin-factory/index.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPluginFactoryProvider///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin-factory-provider/index.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPluginFactoryProvider/AndroidOmapiPluginFactoryProvider/#android.app.Activity#kotlin.Function1[org.eclipse.keyple.plugin.android.omapi.AndroidOmapiPluginFactory,kotlin.Unit]/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin-factory-provider/-android-omapi-plugin-factory-provider.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiPluginFactoryProvider/getFactory/#/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-plugin-factory-provider/get-factory.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader.Companion///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/-companion/index.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader.Companion/READER_NAME_ESE/#/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/-companion/-r-e-a-d-e-r_-n-a-m-e_-e-s-e.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader.Companion/READER_NAME_SIM_1/#/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/-companion/-r-e-a-d-e-r_-n-a-m-e_-s-i-m_1.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader.Companion/READER_NAME_SIM_2/#/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/-companion/-r-e-a-d-e-r_-n-a-m-e_-s-i-m_2.html
+$dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/index.html
+org.eclipse.keyple.plugin.android.omapi
+
