@@ -5,12 +5,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- APDU exchange with a card selected without AID (e.g. a SAM selected by its power-on data) failed with
+  "Channel is not open": the basic channel is now opened on first transmission.
+- The OMAPI session was not closed when closing the physical channel if no channel had been opened.
+- R8 build failure of the applications using the plugin ("Missing class
+  org.simalliance.openmobileapi..."): the library now provides the required consumer rule.
+### Upgraded
+- `keyple-util-java-lib` from `2.4.1` to `2.5.0`
 
 ## [2.1.1] - 2026-02-20
 ### Changed
 - Normalized logging and error messages using Keyple coding standards.
 - Migrated the CI pipeline from Jenkins to GitHub Actions.
 ### Upgraded
+- `keyple-plugin-java-api` from `2.3.1` to `2.3.2`
+- `keyple-common-java-api` from `2.0.1` to `2.0.2`
 - `keyple-util-java-lib` from `2.4.0` to `2.4.1`
 - `slf4j-api` from `1.7.32` to `1.7.36` (compileOnly)
 
