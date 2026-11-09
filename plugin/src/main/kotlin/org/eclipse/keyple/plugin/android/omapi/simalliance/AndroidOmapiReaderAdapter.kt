@@ -21,7 +21,7 @@ import org.simalliance.openmobileapi.Session
 import org.slf4j.LoggerFactory
 
 internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, readerName: String) :
-    AbstractAndroidOmapiReader(readerName) {
+    AbstractAndroidOmapiReader<Session, Channel>(readerName) {
 
   private val logger = LoggerFactory.getLogger(AndroidOmapiReaderAdapter::class.java)
 
@@ -29,9 +29,16 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     private const val P2_SUPPORTED_MIN_VERSION = 3
   }
 
-  private var session: Session? = null
-  private var openChannel: Channel? = null
   private val omapiVersion = nativeReader.seService.version.toFloat()
+
+  override fun openNativeBasicChannel(session: Session): Channel? = session.openBasicChannel(null)
+
+  override fun transmitNative(channel: Channel, apduIn: ByteArray): ByteArray =
+      channel.transmit(apduIn)
+
+  override fun closeNativeChannels(session: Session) = session.closeChannels()
+
+  override fun closeNativeSession(session: Session) = session.close()
 
   /**
    * {@inheritDoc}
@@ -82,38 +89,6 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
   }
 
   /**
-   * Opens the basic channel without selecting any application.
-   *
-   * @throws ReaderIOException If the basic channel cannot be opened.
-   */
-  @Throws(ReaderIOException::class)
-  private fun openBasicChannel() {
-    if (logger.isDebugEnabled) {
-      logger.debug("[readerExt={}] Opening card basic channel", name)
-    }
-    try {
-      openChannel = session?.openBasicChannel(null)
-    } catch (e: IOException) {
-      throw ReaderIOException("Failed to open the basic channel", e)
-    } catch (e: SecurityException) {
-      throw ReaderIOException("Failed to open the basic channel", e)
-    }
-    if (openChannel == null) {
-      throw ReaderIOException("Failed to open the basic channel")
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 2.0.0
-   */
-  override fun closeLogicalChannel() {
-    session?.closeChannels()
-    openChannel = null
-  }
-
-  /**
    * {@inheritDoc}
    *
    * @since 2.0.0
@@ -148,17 +123,6 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
    *
    * @since 2.0.0
    */
-  override fun closePhysicalChannel() {
-    session?.close()
-    session = null
-    openChannel = null
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 2.0.0
-   */
   override fun isPhysicalChannelOpen(): Boolean {
     return session?.isClosed == false
   }
@@ -170,27 +134,6 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
    */
   override fun checkCardPresence(): Boolean {
     return nativeReader.isSecureElementPresent
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 2.0.0
-   */
-  @Throws(ReaderIOException::class)
-  override fun transmitApdu(apduIn: ByteArray): ByteArray {
-    // A card selected without AID (e.g. a SAM selected by its power-on data only) has no channel
-    // open yet: the basic channel is opened on first use.
-    if (openChannel == null) {
-      openBasicChannel()
-    }
-    var dataOut = byteArrayOf(0)
-    try {
-      openChannel.let { dataOut = it?.transmit(apduIn) ?: throw IOException("Channel is not open") }
-    } catch (e: IOException) {
-      throw ReaderIOException("Failed to transmit APDU", e)
-    }
-    return dataOut
   }
 
   /**
