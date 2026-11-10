@@ -14,4 +14,3 @@ $dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader.Compa
 $dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader.Companion/READER_NAME_SIM_2/#/PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/-companion/-r-e-a-d-e-r_-n-a-m-e_-s-i-m_2.html
 $dokka.location:org.eclipse.keyple.plugin.android.omapi/AndroidOmapiReader///PointingToDeclaration/-keyple -plugin -android -o-m-a-p-i -java -lib/org.eclipse.keyple.plugin.android.omapi/-android-omapi-reader/index.html
 org.eclipse.keyple.plugin.android.omapi
-
