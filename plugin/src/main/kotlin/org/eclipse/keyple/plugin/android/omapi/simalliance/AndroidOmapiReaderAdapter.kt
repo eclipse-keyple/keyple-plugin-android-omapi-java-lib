@@ -21,7 +21,7 @@ import org.simalliance.openmobileapi.Session
 import org.slf4j.LoggerFactory
 
 internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, readerName: String) :
-    AbstractAndroidOmapiReader(readerName) {
+    AbstractAndroidOmapiReader<Session, Channel>(readerName) {
 
   private val logger = LoggerFactory.getLogger(AndroidOmapiReaderAdapter::class.java)
 
@@ -29,9 +29,16 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     private const val P2_SUPPORTED_MIN_VERSION = 3
   }
 
-  private var session: Session? = null
-  private var openChannel: Channel? = null
   private val omapiVersion = nativeReader.seService.version.toFloat()
+
+  override fun openNativeBasicChannel(session: Session): Channel? = session.openBasicChannel(null)
+
+  override fun transmitNative(channel: Channel, apduIn: ByteArray): ByteArray =
+      channel.transmit(apduIn)
+
+  override fun closeNativeChannels(session: Session) = session.closeChannels()
+
+  override fun closeNativeSession(session: Session) = session.close()
 
   /**
    * {@inheritDoc}
@@ -40,24 +47,14 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
    */
   override fun openChannelForAid(aid: ByteArray?, isoControlMask: Byte): ByteArray {
     if (aid == null) {
-      try {
-        openChannel = session?.openBasicChannel(null)
-      } catch (e: IOException) {
-        throw ReaderIOException("Failed to open the basic channel", e)
-      } catch (e: ReaderIOException) {
-        throw ReaderIOException(
-            "Failed to communicate with card while opening the basic channel. DF Name: " +
-                HexUtil.toHex(aid),
-            e.cause)
-      }
-
-      if (openChannel == null) {
-        throw ReaderIOException("Failed to open the basic channel")
-      }
+      openBasicChannel()
     } else {
       if (logger.isDebugEnabled) {
         logger.debug(
-            "[readerExt={}] Opening card physical channel [aid={}]", name, HexUtil.toHex(aid))
+            "[readerExt={}] Opening card physical channel [aid={}]",
+            name,
+            HexUtil.toHex(aid),
+        )
       }
       try {
         // openLogicalChannel of SimAlliance OMAPI is only available for version 3.0+ of the
@@ -74,7 +71,8 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
                 session?.openLogicalChannel(aid, p2)
               } else {
                 throw ReaderIOException(
-                    "P2 != 00h while opening logical channel is only supported by OMAPI version >= 3.0. Current is $omapiVersion")
+                    "P2 != 00h while opening logical channel is only supported by OMAPI version >= 3.0. Current is $omapiVersion"
+                )
               }
             }
       } catch (e: IOException) {
@@ -83,7 +81,9 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
         throw java.lang.IllegalArgumentException("AID not found: " + HexUtil.toHex(aid), e)
       } catch (e: SecurityException) {
         throw ReaderIOException(
-            "Failed to open the logical channel. AID:" + HexUtil.toHex(aid), e.cause)
+            "Failed to open the logical channel. AID:" + HexUtil.toHex(aid),
+            e.cause,
+        )
       }
 
       if (openChannel == null) {
@@ -92,15 +92,6 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     }
     /* get the FCI and build an ApduResponse */
     return openChannel!!.selectResponse
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 2.0.0
-   */
-  override fun closeLogicalChannel() {
-    session?.closeChannels()
   }
 
   /**
@@ -138,18 +129,6 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
    *
    * @since 2.0.0
    */
-  override fun closePhysicalChannel() {
-    openChannel?.let {
-      it.session.close()
-      openChannel = null
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 2.0.0
-   */
   override fun isPhysicalChannelOpen(): Boolean {
     return session?.isClosed == false
   }
@@ -161,22 +140,6 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
    */
   override fun checkCardPresence(): Boolean {
     return nativeReader.isSecureElementPresent
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @since 2.0.0
-   */
-  @Throws(ReaderIOException::class)
-  override fun transmitApdu(apduIn: ByteArray): ByteArray {
-    var dataOut = byteArrayOf(0)
-    try {
-      openChannel.let { dataOut = it?.transmit(apduIn) ?: throw IOException("Channel is not open") }
-    } catch (e: IOException) {
-      throw ReaderIOException("Failed to transmit APDU", e)
-    }
-    return dataOut
   }
 
   /**

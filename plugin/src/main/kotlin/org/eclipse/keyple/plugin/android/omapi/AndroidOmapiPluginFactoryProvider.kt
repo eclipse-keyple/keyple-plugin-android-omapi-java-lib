@@ -31,7 +31,7 @@ import android.app.Activity
  */
 class AndroidOmapiPluginFactoryProvider(
     private val activity: Activity,
-    callback: (AndroidOmapiPluginFactory) -> Unit
+    callback: (AndroidOmapiPluginFactory) -> Unit,
 ) : AndroidOmapiPluginFactory {
 
   private var factoryAdapter: AndroidOmapiPluginFactoryAdapter =

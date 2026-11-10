@@ -2,10 +2,10 @@
 //  GRADLE CONFIGURATION
 ///////////////////////////////////////////////////////////////////////////////
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
   id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-parcelize")
   id("com.diffplug.spotless")
   id("org.jetbrains.dokka")
   signing
@@ -18,10 +18,11 @@ plugins {
 
 dependencies {
   compileOnly(files("libs/org.simalliance.openmobileapi.jar"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.20")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.21")
   implementation("org.eclipse.keyple:keyple-common-java-api:2.0.2")
   implementation("org.eclipse.keyple:keyple-plugin-java-api:2.3.2")
-  implementation("org.eclipse.keyple:keyple-util-java-lib:2.4.1")
+  implementation("org.eclipse.keyple:keyple-util-java-lib:2.5.0")
+  compileOnly("androidx.annotation:annotation:1.9.1")
   compileOnly("org.slf4j:slf4j-api:1.7.36")
 }
 
@@ -48,7 +49,6 @@ android {
     minSdk = (project.findProperty("androidMinSdk") as String).toInt()
     consumerProguardFiles("consumer-rules.pro")
   }
-  buildFeatures { viewBinding = true }
   buildTypes {
     getByName("release") {
       isMinifyEnabled = false
@@ -58,28 +58,24 @@ android {
   compileOptions {
     sourceCompatibility = JavaVersion.toVersion(javaSourceLevel)
     targetCompatibility = JavaVersion.toVersion(javaTargetLevel)
-    println("Compiling Java $sourceCompatibility to Java $targetCompatibility")
   }
-  kotlinOptions { jvmTarget = javaTargetLevel }
-  sourceSets {
-    getByName("main").java.srcDirs("src/main/kotlin")
-    getByName("debug").java.srcDirs("src/debug/kotlin")
-  }
-  libraryVariants.all {
-    outputs.all {
-      val outputImpl = this as com.android.build.gradle.internal.api.LibraryVariantOutputImpl
-      val variantName = name
-      val versionName = project.version.toString()
-      val newName = "${rootProject.name}-$versionName-$variantName.aar"
-      outputImpl.outputFileName = newName
-    }
-  }
+  kotlin { compilerOptions { jvmTarget.set(JvmTarget.fromTarget(javaTargetLevel)) } }
   publishing {
     singleVariant("release") {
       // No withSourcesJar() and withJavadocJar(), as we'll configure them manually during release
     }
   }
   lint { abortOnError = false }
+}
+
+base { archivesName.set("${rootProject.name}-${project.version}") }
+
+dokka {
+  pluginsConfiguration.html {
+    footerMessage.set(project.findProperty("javadoc.copyright") as String)
+  }
+  moduleName.set(title)
+  dokkaSourceSets.configureEach { includes.from(files(generatedOverviewFile)) }
 }
 
 fun copyLicenseFiles() {
@@ -119,25 +115,18 @@ tasks {
                     .takeIf { it.exists() }
                     ?.readText()
                     .orEmpty()
-                    .trim())
+                    .trim()
+            )
             appendLine()
-            appendLine("<br>")
-            appendLine()
-            appendLine("> ${project.findProperty("javadoc.copyright") as String}")
-          })
+          }
+      )
     }
   }
-  dokkaHtml.configure {
+  withType(org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask::class.java).configureEach {
     dependsOn("generateDokkaOverview")
-    dokkaSourceSets {
-      named("main") {
-        noAndroidSdkLink.set(false)
-        includeNonPublic.set(false)
-        includes.from(files(generatedOverviewFile))
-        moduleName.set(title)
-      }
+    doFirst {
+      println("Generating Dokka documentation for ${project.name} version ${project.version}")
     }
-    doFirst { println("Generating Dokka HTML for ${project.name} version ${project.version}") }
   }
   withType<Jar>().configureEach {
     if (archiveClassifier.get() == "sources") {
@@ -146,33 +135,39 @@ tasks {
         attributes(
             mapOf(
                 "Implementation-Title" to "$title Sources",
-                "Implementation-Version" to project.version))
+                "Implementation-Version" to project.version,
+            )
+        )
       }
     }
   }
   register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from(android.sourceSets.getByName("main").java.srcDirs)
+    from("src/main/kotlin")
     from(layout.buildDirectory.dir("resources/main"))
     doFirst { copyLicenseFiles() }
     manifest {
       attributes(
           mapOf(
               "Implementation-Title" to "$title Documentation",
-              "Implementation-Version" to project.version))
+              "Implementation-Version" to project.version,
+          )
+      )
     }
   }
   register<Jar>("javadocJar") {
-    dependsOn(dokkaHtml)
+    dependsOn("dokkaGeneratePublicationHtml")
     archiveClassifier.set("javadoc")
-    from(dokkaHtml.flatMap { it.outputDirectory })
+    from(layout.buildDirectory.dir("dokka/html"))
     from(layout.buildDirectory.dir("resources/main"))
     doFirst { copyLicenseFiles() }
     manifest {
       attributes(
           mapOf(
               "Implementation-Title" to "$title Documentation",
-              "Implementation-Version" to project.version))
+              "Implementation-Version" to project.version,
+          )
+      )
     }
   }
   register("copyLicenseFiles") { doLast { copyLicenseFiles() } }
@@ -221,7 +216,9 @@ afterEvaluate {
               mapOf(
                   "project.build.sourceEncoding" to "UTF-8",
                   "maven.compiler.source" to javaSourceLevel,
-                  "maven.compiler.target" to javaTargetLevel))
+                  "maven.compiler.target" to javaTargetLevel,
+              )
+          )
         }
       }
     }
