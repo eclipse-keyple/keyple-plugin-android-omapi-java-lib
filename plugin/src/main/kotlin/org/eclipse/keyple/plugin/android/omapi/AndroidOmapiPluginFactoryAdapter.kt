@@ -22,7 +22,7 @@ import org.eclipse.keyple.core.plugin.spi.PluginSpi
 
 internal class AndroidOmapiPluginFactoryAdapter(
     private val context: Context,
-    callback: (AndroidOmapiPluginFactory) -> Unit
+    callback: (AndroidOmapiPluginFactory) -> Unit,
 ) : AndroidOmapiPluginFactory, PluginFactorySpi {
 
   private var sdkVersion: Int = Build.VERSION.SDK_INT

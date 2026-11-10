@@ -11,8 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The OMAPI session was not closed when closing the physical channel if no channel had been opened.
 - R8 build failure of the applications using the plugin ("Missing class
   org.simalliance.openmobileapi..."): the library now provides the required consumer rule.
+### Changed
+- Android applications written in Kotlin must now use Kotlin `2.2` or later to compile against this library.
+### Removed
+- Unused `viewBinding` build feature and `kotlin-parcelize` plugin: the `androidx.databinding:viewbinding` dependency is
+  no longer propagated to the applications.
 ### Upgraded
 - `keyple-util-java-lib` from `2.4.1` to `2.5.0`
+- `kotlin-stdlib` and Kotlin Gradle plugin from `1.7.20` to `2.3.0`
+- Android Gradle plugin from `7.4.2` to `8.13.2`
+- Android `compileSdk` from `33` to `35`
+- Gradle from `8.9` to `9.3.0`
+- Dokka from `1.9.20` to `2.1.0`
+- Spotless from `7.0.4` to `8.2.1`
 
 ## [2.1.1] - 2026-02-20
 ### Changed

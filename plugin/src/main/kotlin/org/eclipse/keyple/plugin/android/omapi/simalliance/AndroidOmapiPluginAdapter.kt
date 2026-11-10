@@ -35,7 +35,8 @@ internal object AndroidOmapiPluginAdapter :
             SEService.CallBack {
               logger.info("OMAPI SE Service connected [version={}]", seService?.version)
               callback()
-            })
+            }
+        )
   }
 
   override fun getNativeReaders(): Array<org.simalliance.openmobileapi.Reader>? {
@@ -46,8 +47,11 @@ internal object AndroidOmapiPluginAdapter :
     logger.info(
         "Reader connected [nativeReader={}, isCardPresent={}]",
         nativeReader.name,
-        nativeReader.isSecureElementPresent)
+        nativeReader.isSecureElementPresent,
+    )
     return AndroidOmapiReaderAdapter(
-        nativeReader, mapNativeReaderNameToKeypleReaderName(nativeReader.name))
+        nativeReader,
+        mapNativeReaderNameToKeypleReaderName(nativeReader.name),
+    )
   }
 }

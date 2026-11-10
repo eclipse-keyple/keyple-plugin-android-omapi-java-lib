@@ -47,7 +47,10 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
     } else {
       if (logger.isDebugEnabled) {
         logger.debug(
-            "[readerExt={}] Opening card physical channel [aid={}]", name, HexUtil.toHex(aid))
+            "[readerExt={}] Opening card physical channel [aid={}]",
+            name,
+            HexUtil.toHex(aid),
+        )
       }
       try {
         openChannel = session?.openLogicalChannel(aid, isoControlMask)
@@ -57,7 +60,9 @@ internal class AndroidOmapiReaderAdapter(private val nativeReader: Reader, reade
         throw java.lang.IllegalArgumentException("AID not found: " + HexUtil.toHex(aid), e)
       } catch (e: SecurityException) {
         throw ReaderIOException(
-            "Failed to open the logical channel. AID: " + HexUtil.toHex(aid), e.cause)
+            "Failed to open the logical channel. AID: " + HexUtil.toHex(aid),
+            e.cause,
+        )
       }
 
       if (openChannel == null) {

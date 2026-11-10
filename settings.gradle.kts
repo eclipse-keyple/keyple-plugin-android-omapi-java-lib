@@ -1,4 +1,5 @@
 rootProject.name = "keyple-plugin-android-omapi-java-lib"
+
 include(":plugin")
 
 pluginManagement {
@@ -18,4 +19,3 @@ dependencyResolutionManagement {
     maven(url = "https://central.sonatype.com/repository/maven-snapshots")
   }
 }
-
