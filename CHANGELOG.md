@@ -18,11 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   no longer propagated to the applications.
 ### Upgraded
 - `keyple-util-java-lib` from `2.4.1` to `2.5.0`
-- `kotlin-stdlib` and Kotlin Gradle plugin from `1.7.20` to `2.3.0`
-- Android Gradle plugin from `7.4.2` to `8.13.2`
+- `kotlin-stdlib` and Kotlin Gradle plugin from `1.7.20` to `2.3.21`
+- Android Gradle plugin from `7.4.2` to `9.4.1`
 - Android `compileSdk` from `33` to `35`
-- Gradle from `8.9` to `9.3.0`
-- Dokka from `1.9.20` to `2.1.0`
+- Gradle from `8.9` to `9.8.1`
+- Dokka from `1.9.20` to `2.2.0`
 - Spotless from `7.0.4` to `8.2.1`
 
 ## [2.1.1] - 2026-02-20

@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   id("com.android.library")
-  id("kotlin-android")
   id("com.diffplug.spotless")
   id("org.jetbrains.dokka")
   signing
@@ -19,7 +18,7 @@ plugins {
 
 dependencies {
   compileOnly(files("libs/org.simalliance.openmobileapi.jar"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.21")
   implementation("org.eclipse.keyple:keyple-common-java-api:2.0.2")
   implementation("org.eclipse.keyple:keyple-plugin-java-api:2.3.2")
   implementation("org.eclipse.keyple:keyple-util-java-lib:2.5.0")
@@ -61,19 +60,6 @@ android {
     targetCompatibility = JavaVersion.toVersion(javaTargetLevel)
   }
   kotlin { compilerOptions { jvmTarget.set(JvmTarget.fromTarget(javaTargetLevel)) } }
-  sourceSets {
-    getByName("main").java.srcDirs("src/main/kotlin")
-    getByName("debug").java.srcDirs("src/debug/kotlin")
-  }
-  libraryVariants.all {
-    outputs.all {
-      val outputImpl = this as com.android.build.gradle.internal.api.LibraryVariantOutputImpl
-      val variantName = name
-      val versionName = project.version.toString()
-      val newName = "${rootProject.name}-$versionName-$variantName.aar"
-      outputImpl.outputFileName = newName
-    }
-  }
   publishing {
     singleVariant("release") {
       // No withSourcesJar() and withJavadocJar(), as we'll configure them manually during release
@@ -82,14 +68,14 @@ android {
   lint { abortOnError = false }
 }
 
+base { archivesName.set("${rootProject.name}-${project.version}") }
+
 dokka {
   pluginsConfiguration.html {
     footerMessage.set(project.findProperty("javadoc.copyright") as String)
   }
-  dokkaSourceSets.named("main") {
-    includes.from(files(generatedOverviewFile))
-    moduleName.set(title)
-  }
+  moduleName.set(title)
+  dokkaSourceSets.configureEach { includes.from(files(generatedOverviewFile)) }
 }
 
 fun copyLicenseFiles() {
@@ -157,7 +143,7 @@ tasks {
   }
   register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from(android.sourceSets.getByName("main").java.srcDirs)
+    from("src/main/kotlin")
     from(layout.buildDirectory.dir("resources/main"))
     doFirst { copyLicenseFiles() }
     manifest {
